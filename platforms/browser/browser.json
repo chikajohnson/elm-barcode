@@ -1,0 +1,32 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "io.cordova.barcode-demo"
+    },
+    "cordova-plugin-barcodescanner": {
+      "PACKAGE_NAME": "io.cordova.barcode-demo"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "file": "plugins/cordova-plugin-barcodescanner/www/barcodescanner.js",
+      "id": "cordova-plugin-barcodescanner.BarcodeScanner",
+      "pluginId": "cordova-plugin-barcodescanner",
+      "clobbers": [
+        "cordova.plugins.barcodeScanner"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "cordova-plugin-compat": "1.2.0",
+    "cordova-plugin-barcodescanner": "0.7.4"
+  }
+}
