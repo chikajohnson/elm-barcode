@@ -51,7 +51,7 @@ var app = {
                 if (!result.cancelled) source.value = result.text;
             },
                 function (error) {
-                    alert("Scanning failed: " + error);
+                    // alert("Scanning failed: " + error);
                 },
                 {
                     preferFrontCamera: false, // iOS and Android

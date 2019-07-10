@@ -5,7 +5,7 @@
                 <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
             </div>
             <div class="col-8 mx-auto font-weight-bolder">
-                CHE-0001-WB
+            {{vm.task.documentNo}}
             </div>
             <div class="col-2 float-right">
             </div>
@@ -16,19 +16,21 @@
     <div class="page-header" id="banner">
         <div class="row">
             <ul class="list-group w-100 mb-5">
-                <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder">
-                   (1) 10000052
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder" 
+                data-ng-repeat="task in vm.task.tasks">
+                   <span>({{$index + 1}}) <a href="#"> {{task.lotNo}}</a></span>
                     <div class="">
                         <span class="btn btn-sm  text-secondary font-weight-bolder rounded-pill mr-2" type="button">
                             <i class="fa fa-2x  fa-check-square-o" ui-sref="main.goodreciept-new"></i>
                         </span>
                         <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill" type="button">
-                            <i class="fa fa-2x  fa-trash " data-ng-click="vm.deleteTask()"></i>
+                            <i class="fa fa-2x  fa-trash " data-ng-click="vm.deleteTask(task)"></i>
                             </butspanton>
                     </div>
                 </li>
             </ul>
         </div>
+
         <div class="row mx-auto text-center mt-5">
             <div class="col-6">
                 <div class="form-group text-center">

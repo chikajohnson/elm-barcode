@@ -85,7 +85,7 @@
       vm.browserMode = false;
     }
     else{
-      alert("No cordova loaded");
+      // alert("No cordova loaded");
     }
 
       $rootScope.$on('BarcodeCaptured', function (evt, data) {

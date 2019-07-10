@@ -5,14 +5,18 @@
     var vm = this;
     vm.goodReceipts = [];
 
-    if($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === ''){
+    if ($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === '') {
       $state.go('index.dashboard');
     }
 
-    vm.goodReceipts = $rootScope.userJob.ReceiptModel;
-    
-    vm.showDetail = function () {      
-       $state.go('main.goodreciept-new');
+    if ($rootScope.userJob != null) {
+      vm.goodReceipts = $rootScope.userJob.ReceiptModel;
+    }
+
+    vm.showDetail = function (receipt) {
+      $rootScope.goodReceipt = receipt;
+      console.log($rootScope.goodReceipt);
+      $state.go('main.goodreciept-new');
     }
 
   }]);
@@ -20,7 +24,8 @@
   angular.module("app").controller("goodRecieptViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
     var vm = this;
-
+    vm.task = sharedSvc.getStorage('UserTask');
+    
     vm.submit = function () {
       swal({
         type: 'warning',
@@ -82,19 +87,37 @@
 
   angular.module("app").controller("goodRecieptNewCtrl", ["sharedSvc", "$state", '$scope', "$rootScope", "toastr", "barcodeService", function (sharedSvc, $state, $scope, $rootScope, toastr, barcodeService) {
     var vm = this;
-    vm.formData = {};
 
+    vm.formData = {};
+    vm.products = [];
+    vm.batches = [];
+    vm.productMeasures = [];
+    vm.stockStates = [];
     vm.browserMode = true;
     vm.mobilePlatform = false;
+
+    vm.goodReceipt = $rootScope.goodReceipt;
+
+    let clientId = sharedSvc.getStorage('theclient');
+    let depotCode = sharedSvc.getStorage('thedepot');
+
+    var stockStateRepository = sharedSvc.initialize('api/stockstates/' + clientId + "/" + depotCode);
+
+    stockStateRepository.get(function (response) {
+      vm.stockStates = response.result;
+      console.log(vm.stockStates);
+    });
+
 
     if (window.cordova) {
       barcodeService.loadBarcodeScanner();
       vm.mobilePlatform = true;
       vm.browserMode = false;
+    } else {
+      // alert("No cordova loaded");
     }
-    else {
-      alert("No cordova loaded");
-    }
+
+    getProductInfo(vm.goodReceipt);
 
     $rootScope.$on('BarcodeCaptured', function (evt, data) {
       $scope.$watch("vm.formData.lotNo", function (newVal, oldVal) {
@@ -107,10 +130,75 @@
       $scope.$apply();
     });
 
-    vm.save = function () {
+    vm.save = function (data) {
+      const task = sharedSvc.getStorage('UserTask');
+
+      if (Object.keys(vm.formData).length === 0) {
+        toastr.error("You cannot save an empty task.");
+        return;
+      }
+
+      if (task === null || task === undefined) { // user does not have a task already
+        sharedSvc.createStorageParam('UserTask', {
+          tasks: [vm.formData],
+          documentNo: vm.goodReceipt.DocumentNo
+        });
+      } else {
+        if (task.tasks.length > 0) {
+          let taskList = task.tasks.filter(x => x.lotNo !== vm.formData.lotNo);
+
+          sharedSvc.createStorageParam('UserTask', {
+            tasks: [...taskList, vm.formData],
+            documentNo: vm.goodReceipt.DocumentNo
+          });
+        }
+      }
+
       $state.go("main.goodreciept-view");
       toastr.success("save successfully")
     };
 
+    //extract produts, measures and batches from receipt
+    function getProductInfo(receipt) {
+      if (receipt === undefined || receipt === null || receipt === '') {
+        $state.go('index.dashboard');
+      } else {
+        let product, batch, measure = {}
+        receipt.GoodReceiveNoteDetails.map((prod) => {
+          product = {
+            ProductID: prod.ProductID,
+            ProductName: prod.ProductID,
+            ProductUniqueID: prod.ProductUniqueID
+          }
+          vm.products.push(product);
+
+          let batchExists = vm.batches.find(x => x.BatchID == prod.BatchID);
+          if (batchExists === undefined) {
+            batch = {
+              BatchID: prod.BatchID,
+              BatchManufaturingDate: prod.BatchManufaturingDate,
+              BatchExpiringDate: prod.BatchExpiringDate
+            }
+            vm.batches.push(batch);
+          }
+
+          let measureExists = vm.productMeasures.find(x => x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit);
+          if (measureExists === undefined) {
+            measure = {
+              MeasurementID: prod.MeasurementID,
+              MeasurementName: prod.MeasurementName,
+              BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
+              BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
+              ReceivedQuantity: prod.ReceivedQuantity,
+              ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
+              ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+            }
+            vm.productMeasures.push(measure);
+          }
+        })
+
+        console.log(vm.products, vm.batches, vm.productMeasures, vm.stockStates);
+      }
+    }
   }]);
 })()
