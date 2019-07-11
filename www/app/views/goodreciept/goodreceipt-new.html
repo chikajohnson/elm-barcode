@@ -28,15 +28,15 @@
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="product">Product</label>
-              <select required class="form-control rounded-pill bg-light" id="product" data-ng-model="vm.formData.productID"
-               data-ng-options="item.ProductID as item.ProductName for item in vm.products">
+              <select required class="form-control rounded-pill bg-light" id="product" data-ng-model="vm.product"
+               data-ng-options="item as item.ProductName for item in vm.products" data-ng-change="vm.setSelectedProduct(vm.product)"> 
                <option value="">Select Product</option>
               </select>
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="batch">Batch</label>
-              <select class="form-control rounded-pill bg-light" id="batch" data-ng-model="vm.formData.batchID" 
-              data-ng-options="item.BatchID as item.BatchID for item in vm.batches">
+              <select class="form-control rounded-pill bg-light" id="batch" data-ng-model="vm.batch" 
+              data-ng-options="item as item.BatchID for item in vm.batches" data-ng-change="vm.setSelectedBatch(vm.batch)">
               <option value="">Select Batch</option>
               </select>
             </div>
@@ -47,15 +47,16 @@
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="batch">Product Measure</label>
-              <select class="form-control rounded-pill bg-light" id="productMeasure" data-ng-model="vm.formData.receivedQtyMeasurementUnit" 
-              data-ng-options="item.ReceivedQtyMeasurementUnit as item.ReceivedQtyMeasurementUnit for item in vm.productMeasures">
+              <select class="form-control rounded-pill bg-light" id="productMeasure" data-ng-model="vm.receivedQtyMeasure" 
+              data-ng-options="item as item.ReceivedQtyMeasurementUnit for item in vm.productMeasures"
+               data-ng-change="vm.setSelectedMeasure(vm.receivedQtyMeasure)">
                 <option value="">Select  Product Measure</option>                
               </select>
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="batch">Stock State</label>
-              <select class="form-control rounded-pill bg-light" id="stockstate" data-ng-model="vm.formData.stockStateID"  
-              data-ng-options="item.ID as item.StockState for item in vm.stockStates">
+              <select class="form-control rounded-pill bg-light" id="stockstate" data-ng-model="vm.stockState"  
+              data-ng-options="item as item.StockState for item in vm.stockStates" data-ng-change="vm.setSelectedStockState(vm.stockState)">
                 <option value="">Select Stock State</option>
               </select>
             </div>

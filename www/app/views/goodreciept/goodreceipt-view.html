@@ -5,7 +5,7 @@
                 <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
             </div>
             <div class="col-8 mx-auto font-weight-bolder">
-            {{vm.task.documentNo}}
+                {{vm.task.documentNo}}
             </div>
             <div class="col-2 float-right">
             </div>
@@ -14,32 +14,48 @@
 </div>
 <div class="container-fluid">
     <div class="page-header" id="banner">
-        <div class="row">
-            <ul class="list-group w-100 mb-5">
-                <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder" 
-                data-ng-repeat="task in vm.task.tasks">
-                   <span>({{$index + 1}}) <a href="#"> {{task.lotNo}}</a></span>
-                    <div class="">
-                        <span class="btn btn-sm  text-secondary font-weight-bolder rounded-pill mr-2" type="button">
-                            <i class="fa fa-2x  fa-check-square-o" ui-sref="main.goodreciept-new"></i>
+
+        <div id="accordion" class="w-100 m-0 p-0">
+            <div class="card" data-ng-repeat="task in vm.task.tasks">
+                <div class="card-header mb-0 p-2">
+                    <p class="card-link">
+                        <span class="float-left font-weight-bolder">
+                            <span class="text-dark">({{$index + 1}})</span>
+                            &nbsp; &nbsp;<span class="px-4 py-1 bg-light text-primary rounded" data-toggle="collapse" 
+                            href="#collapse{{ $index + 1 }}">{{task.lotNo}} </span>
                         </span>
-                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill" type="button">
-                            <i class="fa fa-2x  fa-trash " data-ng-click="vm.deleteTask(task)"></i>
-                            </butspanton>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2"
+                            type="button">
+                            <i class="fa  fa-2x fa-trash " data-ng-click="vm.deleteTask(task.lotNo)"></i>
+                        </span>
+                    </p>
+                </div>
+                <div id="collapse{{ $index + 1 }}" class="collapse pt-0 mt-0" data-parent="#accordion">
+                    <div class="card-body text-left bg-light">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class=" font-weight-bolder">Product Code: &nbsp;</span>{{task.productID}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Product Name: &nbsp;</span>{{task.productName}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Batch: &nbsp;</span>{{task.batchID}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Quantity: &nbsp;</span>{{task.quantity}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Receive Measure: &nbsp;</span>{{task.receivedQtyMeasurementUnit}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Stock State: &nbsp;</span>{{task.stockStateName}}</li>
+                        </ul>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
 
         <div class="row mx-auto text-center mt-5">
             <div class="col-6">
                 <div class="form-group text-center">
-                    <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.submit()" type="submit">Submit</button>
+                    <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.submit()"
+                        type="submit">Submit</button>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group text-center">
-                    <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.endJob()" type="submit">End Job</button>
+                    <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.endJob()"
+                        type="submit">End Job</button>
                 </div>
             </div>
         </div>
