@@ -13,9 +13,22 @@
       vm.goodReceipts = $rootScope.userJob.ReceiptModel;
     }
 
-    vm.showDetail = function (receipt) {
-      $rootScope.goodReceipt = receipt;
-      $state.go('main.goodreciept-new');
+    vm.startJob = function (receipt) {
+      var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + receipt.DocumentNo);
+
+      userTaskRepository.update({}, {}, function (response) {
+        vm.isBusy = false;
+        vm.isBusy2 = false;
+        vm.formData = {};
+
+        $rootScope.goodReceipt = receipt;
+        $state.go('main.goodreciept-new');
+        toastr.success(response.message);
+      }, function (error) {
+        vm.isBusy = false;
+        vm.isBusy2 = false;
+      })
+
     }
 
   }]);
@@ -46,7 +59,7 @@
       });
     };
 
-    vm.endJob = function () {
+    vm.endJob = function (doc) {
       swal({
         type: 'warning',
         text: 'Are you sure you want to end this job?',
@@ -58,8 +71,7 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        toastr.success("Job ended successfully")
-        $state.go('main.goodreciepts')
+        endJob(doc);
       }, function () {
         return;
       });
@@ -91,7 +103,6 @@
       });
     };
 
-
     function submitTasks() {
       let data = sharedSvc.getStorage("UserTask")
       data.PalletDetailModel = data.tasks;
@@ -101,7 +112,22 @@
         vm.isBusy2 = false;
         vm.formData = {};
         toastr.success(response.message);
-        // $state.go("inventory.list-stock-inward");
+      }, function (error) {
+        vm.isBusy = false;
+        vm.isBusy2 = false;
+      })
+    }
+
+    function endJob(docNo) {
+      var userTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
+
+      userTaskRepository.update({}, {}, function (response) {
+        vm.isBusy = false;
+        vm.isBusy2 = false;
+        vm.formData = {};
+
+        toastr.success("Job ended successfully")
+        $state.go('main.goodreciepts')
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
@@ -144,7 +170,6 @@
 
     $rootScope.$on('BarcodeCaptured', function (evt, data) {
       $scope.$watch("vm.formData.lotNo", function (newVal, oldVal) {
-        alert(data);
         if (newVal !== oldVal) {
           vm.formData.lotNo = "";
         }
@@ -229,8 +254,8 @@
           let measureExists = vm.productMeasures.find(x => x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit);
           if (measureExists === undefined) {
             measure = {
-              MeasurementID: prod.MeasurementID,
-              MeasurementName: prod.MeasurementName,
+              MeasurementID: prod.ReceivedQtyMeasurementUnit,
+              MeasurementName: prod.ReceivedQtyMeasurementUnit,
               BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
               BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
               ReceivedQuantity: prod.ReceivedQuantity,
@@ -247,7 +272,7 @@
       if (item !== undefined || item !== null) {
         vm.formData.stockStateName = item.StockStateCode;
         vm.formData.stockStateID = item.ID;
-        vm.formData.stockState = item.StockState;
+        vm.formData.stockState = item.ID;
       }
     }
 
@@ -262,7 +287,9 @@
     vm.setSelectedMeasure = function (item) {
       if (item !== undefined || item !== null) {
         vm.formData.measurementID = item.MeasurementID;
+        vm.formData.measurementName = item.MeasurementID;
         vm.formData.receivedQtyMeasurementUnit = item.ReceivedQtyMeasurementUnit;
+        vm.formData.receivedQtyMeasurementDescription = item.ReceivedQtyMeasurementDescription;
       }
     }
 
