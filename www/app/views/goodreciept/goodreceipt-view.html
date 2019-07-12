@@ -37,7 +37,7 @@
                             <li class="list-group-item"><span class=" font-weight-bolder">Product Name: &nbsp;</span>{{task.productName}}</li>
                             <li class="list-group-item"><span class=" font-weight-bolder">Batch: &nbsp;</span>{{task.batchID}}</li>
                             <li class="list-group-item"><span class=" font-weight-bolder">Quantity: &nbsp;</span>{{task.quantity}}</li>
-                            <li class="list-group-item"><span class=" font-weight-bolder">Receive Measure: &nbsp;</span>{{task.receivedQtyMeasurementUnit}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder"> Measurement Unit: &nbsp;</span>{{task.receivedQtyMeasurementUnit}}</li>
                             <li class="list-group-item"><span class=" font-weight-bolder">Stock State: &nbsp;</span>{{task.stockStateName}}</li>
                         </ul>
                     </div>
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="row mx-auto text-center mt-5">
+        <div class="row mx-auto text-center mt-5" data-ng-show="vm.task.tasks.length > 0">
             <div class="col-6">
                 <div class="form-group text-center">
                     <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.submit()"
@@ -56,6 +56,14 @@
                 <div class="form-group text-center">
                     <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.endJob(vm.task.documentNo)"
                         type="submit">End Job</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-auto text-center mt-5" data-ng-show="vm.task.tasks.length === 0">
+            <div class="col">
+                <div class="form-group text-center">
+                    <h6 class="font-weight-bolder p-3 bg-gray-light">There is no available tasks for document<br> ({{vm.task.documentNo}})</h6>
                 </div>
             </div>
         </div>

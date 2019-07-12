@@ -4,6 +4,12 @@
 
     var vm = this;
     vm.goodReceipts = [];
+    vm.startedDocs = [];
+
+    let job = sharedSvc.getStorage("UserJob");
+    if(job && job.startedDocs && job.startedDocs.length > 0){
+      vm.startedDocs = job.startedDocs;
+    }
 
     if ($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === '') {
       $state.go('index.dashboard');
@@ -15,11 +21,23 @@
 
     vm.startJob = function (receipt) {
       var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + receipt.DocumentNo);
-
       userTaskRepository.update({}, {}, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
+
+        let savedReceipt = sharedSvc.getStorage("UserJob");
+        if (savedReceipt === null || savedReceipt === undefined) { // there's no receipt
+          sharedSvc.createStorageParam("UserJob", { startedDocs: [receipt.DocumentNo], currentDoc: receipt.DocumentNo });
+        }
+        else if (savedReceipt.startedDocs) {
+          let exists = savedReceipt.startedDocs.includes(receipt.DocumentNo);
+          if (!exists) {
+            savedReceipt.startedDocs.push(receipt.DocumentNo);
+          }
+          savedReceipt.currentDoc = receipt.DocumentNo;
+          sharedSvc.createStorageParam("UserJob", savedReceipt);
+        }
 
         $rootScope.goodReceipt = receipt;
         $state.go('main.goodreciept-new');
@@ -36,9 +54,25 @@
   angular.module("app").controller("goodRecieptViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
     var vm = this;
-    vm.task = sharedSvc.getStorage('UserTask');
-
+    vm.currentDoc = null;
+    vm.task = {};
     var userTaskRepository = sharedSvc.initialize('api/userjob/' + sharedSvc.getStorage("UserID"));
+    vm.job = sharedSvc.getStorage('UserJob');
+
+    if (vm.job && vm.job.jobs) {
+      vm.currentDoc = vm.job.currentDoc;
+      let result = vm.job.jobs.find(x => x.documentNo === vm.currentDoc);
+      if(result !== undefined){
+        vm.task = result;
+      }
+      else{
+        toastr.warning("You have not saved any task for doccument:  " + vm.currentDoc);
+        $state.go('main.goodreciepts');
+      }
+    }
+    else {
+      $state.go('main.goodreciepts');
+    }
 
     vm.submit = function () {
       swal({
@@ -52,8 +86,7 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        submitTasks();
-        $state.go('main.success')
+        submitTasks();        
       }, function () {
         //$state.go('index.dashboard') 
       });
@@ -92,8 +125,12 @@
         if (lotNo !== undefined || lotNo !== null) {
           let tasks = vm.task.tasks.filter((x) => x.lotNo !== lotNo);
 
-          vm.task.tasks = tasks;
-          sharedSvc.createStorageParam("UserTask", vm.task);
+          vm.job.jobs.map(x => {
+            if(x.documentNo === vm.currentDoc){
+              x.tasks = tasks
+            }
+          })
+          sharedSvc.createStorageParam("UserJob", vm.job);
           toastr.success("Task deleted successfully");
         }
 
@@ -103,24 +140,30 @@
       });
     };
 
-    function submitTasks() {
-      let data = sharedSvc.getStorage("UserTask")
-      data.PalletDetailModel = data.tasks;
 
-      userTaskRepository.save({}, data, function (response) {
+
+    function submitTasks() {
+      let job = sharedSvc.getStorage("UserJob");
+      let userJob = null;
+      if (job && job.jobs) {
+        userJob = job.jobs.find(x => x.documentNo === vm.currentDoc);
+      }
+      userJob.PalletDetailModel = userJob.tasks;
+      userTaskRepository.save({}, userJob, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
+        $state.go('main.success')
         toastr.success(response.message);
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
+        toastr.error("failed to submit job");
       })
     }
 
     function endJob(docNo) {
       var userTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
-
       userTaskRepository.update({}, {}, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
@@ -145,12 +188,12 @@
     vm.stockStates = [];
     vm.browserMode = true;
     vm.mobilePlatform = false;
-
     vm.goodReceipt = $rootScope.goodReceipt;
+    vm.savedTasks = {};
+    vm.currentDoc = null;
 
     let clientId = sharedSvc.getStorage('theclient');
     let depotCode = sharedSvc.getStorage('thedepot');
-
     var stockStateRepository = sharedSvc.initialize('api/stockstates/' + clientId + "/" + depotCode);
 
     stockStateRepository.get(function (response) {
@@ -178,9 +221,21 @@
       $scope.$apply();
     });
 
+
+    const savesJob = sharedSvc.getStorage('UserJob');
+    vm.currentDoc = savesJob.currentDoc;
+
+    if (savesJob && savesJob.jobs) {
+      let item = savesJob.jobs.find(x => x.documentNo === vm.currentDoc);
+      if (item !== undefined) {
+        vm.savedTasks = item.tasks;
+      }
+    }
+
+
     vm.save = function (data) {
-      const task = sharedSvc.getStorage('UserTask');
-      console.log("data", data);
+      let task = sharedSvc.getStorage('UserJob');
+
       if (Object.keys(vm.formData).length === 0) {
         toastr.error("You cannot save an empty task.");
         return;
@@ -194,35 +249,71 @@
 
       vm.formData = {
         ...vm.formData,
+        documentNo: vm.goodReceipt.DocumentNo,
         detailID: noteDetail.ID,
         parentID: noteDetail.GoodReceiveNoteID,
         status: "Pending",
         palletteNo: vm.formData.lotNo,
         donorID: noteDetail.DonoID,
         serialNoEnd: noteDetail.SerialNoEnd,
-        serialNoStart: noteDetail.SerialNoStart
+        serialNoStart: noteDetail.SerialNoStart,
+        userID: sharedSvc.getStorage("UserID")
       };
 
       if (task === null || task === undefined) { // user does not have a task already
-        sharedSvc.createStorageParam('UserTask', {
+        let job = {
           tasks: [vm.formData],
           documentNo: vm.goodReceipt.DocumentNo,
           status: "pending",
+          type: "receipt",
           userID: sharedSvc.getStorage("UserID")
-        });
+        };
+        task.jobs = [];
+        task.jobs.push(job);
       } else {
-        if (task.tasks.length > 0) {
-          let taskList = task.tasks.filter(x => x.lotNo !== vm.formData.lotNo);
-
-          sharedSvc.createStorageParam('UserTask', {
-            tasks: [...taskList, vm.formData],
+        if (task.jobs === undefined || task.jobs === null) {  // there's no job already
+          let job = {
+            tasks: [vm.formData],
             documentNo: vm.goodReceipt.DocumentNo,
             status: "pending",
+            type: "receipt",
             userID: sharedSvc.getStorage("UserID")
-          });
+          };
+          task.jobs = [];
+          task.jobs.push(job);
+        }
+        else if (task.jobs && task.jobs.length > 0) {
+          let currentJob = task.jobs.find(x => x.type === 'receipt' && x.documentNo == vm.goodReceipt.DocumentNo);
+          if (currentJob === undefined) {  // this particular document is not among the documents started
+            let job = {
+              tasks: [vm.formData],
+              documentNo: vm.goodReceipt.DocumentNo,
+              status: "pending",
+              type: "receipt",
+              userID: sharedSvc.getStorage("UserID")
+            };
+            task.jobs.push(job);
+          }
+          else {   // this particular document is among the documents already started
+            let currentIndex = task.jobs.findIndex(x => x.type === 'receipt' && x.documentNo == vm.goodReceipt.DocumentNo);
+            if (currentIndex !== -1) {
+              let oldTaskList = currentJob.tasks;
+              
+              let lotIndex = oldTaskList.findIndex(x => x.lotNo === vm.formData.lotNo);
+              if(lotIndex !== -1){
+                oldTaskList[lotIndex] = {...oldTaskList[lotIndex], ...vm.formData};
+                currentJob.tasks = [...oldTaskList]
+              }
+              else{
+                currentJob.tasks = [...oldTaskList, vm.formData]
+              }              
+              task.jobs[currentIndex] = currentJob;
+            }
+          }
         }
       }
 
+      sharedSvc.createStorageParam('UserJob', task);
       $state.go("main.goodreciept-view");
       toastr.success("save successfully")
     };

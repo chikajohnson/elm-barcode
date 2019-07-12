@@ -8,8 +8,8 @@
         {{vm.goodReceipt.DocumentNo}}
       </div>
       <div class="col-2 float-right">
-        <i class="fa fa-2x cart fa-cart-arrow-down pointer " ui-sref="main.goodreciept-view">
-          <span class="badge badge-warning rounded-circle px-2 ">4</span>
+        <i class="fa fa-2x cart fa-cart-arrow-down pointer"  data-ng-show="vm.savedTasks.length > 0" ui-sref="main.goodreciept-view">
+          <span class="badge badge-warning rounded-circle px-2 ">{{vm.savedTasks.length}}</span>
         </i>
       </div>
     </div>
