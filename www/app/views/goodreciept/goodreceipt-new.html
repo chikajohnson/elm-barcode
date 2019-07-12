@@ -5,7 +5,7 @@
         <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
       </div>
       <div class="col-8 mx-auto font-weight-bolder">
-        {{vm.goodReceipt.DocumentNo}}
+            {{vm.goodReceipt.DocumentNo}}
       </div>
       <div class="col-2 float-right">
         <i class="fa fa-2x cart fa-cart-arrow-down pointer"  data-ng-show="vm.savedTasks.length > 0" ui-sref="main.goodreciept-view">
@@ -22,7 +22,7 @@
         <form class="text-left">
           <fieldset>
             <div class="form-group">
-              <label class="font-weight-bolder" for="lotNo">Lot No.</label>
+              <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
               <input class="form-control rounded-pill bg-light" id="barcode" aria-describedby="lotHelp" type="text"
                 placeholder="Lot No" data-ng-model="vm.formData.lotNo">
             </div>
