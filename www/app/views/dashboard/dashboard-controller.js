@@ -15,6 +15,14 @@
     });
 
 
+    vm.navigateTo = function(path, count){
+      if (count <= 0) {
+        toastr.warning("This job has not been assigned to you yet!")
+        return;
+      }
+      $state.go(path);
+    }
+
     vm.logOut = function () {
       authService.logOut();
       $state.go('access.login');

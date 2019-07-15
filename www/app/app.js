@@ -21,8 +21,11 @@ var app = angular.module('app', ['ui.router', 'common.services', 'LocalStorageMo
 
       .state("main.picklist", { url: "/picklist", views: { mainContent: { templateUrl: "app/views/picklist/picklist.html", controller: "picklistCtrl as vm" } } })
       .state("main.picklist-new", { url: "/picklist-new", views: { mainContent: { templateUrl: "app/views/picklist/picklist-new.html", controller: "picklistNewCtrl as vm" } } })
+      .state("main.picklist-view", { url: "/picklist-view", views: { mainContent: { templateUrl: "app/views/picklist/goodreceipt-view.html", controller: "picklistViewCtrl as vm" } } })
+
 
       .state("main.putaways", { url: "/putaways", views: { mainContent: { templateUrl: "app/views/putaway/putaways.html", controller: "putawayListCtrl as vm" } } })
+      .state("main.putaway-view", { url: "/putaway-view", views: { mainContent: { templateUrl: "app/views/putaway/putaway-view.html", controller: "putawayViewCtrl as vm" } } })
       .state("main.putaway-new", { url: "/putaway-new", views: { mainContent: { templateUrl: "app/views/putaway/putaway-new.html", controller: "putawayNewCtrl as vm" } } })
 
       .state("main.success", { url: "/success", views: { mainContent: { templateUrl: "app/views/util/success.html", controller: "utilCtrl as vm" } } })

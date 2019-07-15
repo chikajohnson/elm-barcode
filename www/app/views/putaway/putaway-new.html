@@ -21,15 +21,15 @@
             <div class="form-group">
               <label class="font-weight-bolder" for="location">Location</label>
               <input class="form-control rounded-pill bg-light" id="location" aria-describedby="locationHelp"
-                type="text" placeholder="location">
+                type="text" placeholder="location" data-ng-model="vm.formData.location">
             </div>
             <div class="form-group putaway-lot">
               <label class="font-weight-bolder" for="lotNo">Lot No.</label>
-              <input class="form-control rounded-pill bg-light " id="lotNo" aria-describedby="lotHelp" type="text"
-                placeholder="Lot No">
+              <input class="form-control rounded-pill bg-light " id="lotNo" aria-describedby="lotHelp" type="number"
+                placeholder="Lot No" data-ng-model="vm.formData.lotNo">
               <a class="view badge bg-warning text-light rounded px-3" data-ng-click="vm.toggleDetail()">{{vm.showDetail ? "hide" : "view"}}</a>
             </div>
-            <div class="card text-left mx-4 rounded bg-gray-light " data-ng-show="vm.showDetail">
+            <div class="card text-left mx-1 rounded bg-gray-light " data-ng-show="vm.showDetail">
               <div class="card-body font-weight-bolder">
                 <h5 class=""><strong>Details - 093389FGR</strong></h5>
                 <hr class="my-1">
@@ -40,7 +40,7 @@
               </div>
             </div>
             <div class="form-group text-center mt-5">
-              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" data-ng-click="vm.submit()" type="submit">Submit</button>
+              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" data-ng-click="vm.save()" type="submit">save</button>
             </div>
           </fieldset>
         </form>

@@ -7,7 +7,7 @@
     vm.startedDocs = [];
 
     let job = sharedSvc.getStorage("UserJob");
-    if(job && job.startedDocs && job.startedDocs.length > 0){
+    if (job && job.startedDocs && job.startedDocs.length > 0) {
       vm.startedDocs = job.startedDocs;
     }
 
@@ -62,10 +62,10 @@
     if (vm.job && vm.job.jobs) {
       vm.currentDoc = vm.job.currentDoc;
       let result = vm.job.jobs.find(x => x.documentNo === vm.currentDoc);
-      if(result !== undefined){
+      if (result !== undefined) {
         vm.task = result;
       }
-      else{
+      else {
         toastr.warning("You have not saved any task for doccument:  " + vm.currentDoc);
         $state.go('main.goodreciepts');
       }
@@ -86,7 +86,7 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        submitTasks();        
+        submitTasks();
       }, function () {
         //$state.go('index.dashboard') 
       });
@@ -113,7 +113,9 @@
     vm.deleteTask = function (lotNo) {
       swal({
         type: 'error',
-        text: 'Are you sure you want to delete this task?',
+        html: `<span>Are you sure you want to delete this task with lot number 
+        <span class="text-dark font-weight-bolder bg-light">( ${lotNo})</span>?
+        </span>`,
         showCancelButton: true,
         cancelButtonText: 'Cancel',
         confirmButtonText: 'Delete',
@@ -126,7 +128,7 @@
           let tasks = vm.task.tasks.filter((x) => x.lotNo !== lotNo);
 
           vm.job.jobs.map(x => {
-            if(x.documentNo === vm.currentDoc){
+            if (x.documentNo === vm.currentDoc) {
               x.tasks = tasks
             }
           })
@@ -169,11 +171,25 @@
         vm.isBusy2 = false;
         vm.formData = {};
 
+        let remainingJobs = vm.job.jobs.filter(x => x.documentNo !== docNo);
+        if (remainingJobs !== null || remainingJobs !== undefined) {
+          let currentStartedDocs = vm.job.startedDocs.filter(x => x !== docNo);
+          if (currentStartedDocs.length === 0) {
+            delete vm.job.startedDocs;
+          }
+          if (remainingJobs.length === 0) {
+              delete vm.job.jobs;
+          }
+          sharedSvc.createStorageParam("UserJob", vm.job);
+        }
+
+        // $rootScope.userJob.ReceiptModel.GoodReceiveNotes = $rootScope.userJob.ReceiptModel.GoodReceiveNotes.filter(x => x.DocumentNo !== docNo);
         toastr.success("Job ended successfully")
-        $state.go('main.goodreciepts')
+        $state.go('index.dashboard')
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
+        toastr.error("Failed to end job.")
       })
     }
 
@@ -298,15 +314,15 @@
             let currentIndex = task.jobs.findIndex(x => x.type === 'receipt' && x.documentNo == vm.goodReceipt.DocumentNo);
             if (currentIndex !== -1) {
               let oldTaskList = currentJob.tasks;
-              
+
               let lotIndex = oldTaskList.findIndex(x => x.lotNo === vm.formData.lotNo);
-              if(lotIndex !== -1){
-                oldTaskList[lotIndex] = {...oldTaskList[lotIndex], ...vm.formData};
+              if (lotIndex !== -1) {
+                oldTaskList[lotIndex] = { ...oldTaskList[lotIndex], ...vm.formData };
                 currentJob.tasks = [...oldTaskList]
               }
-              else{
+              else {
                 currentJob.tasks = [...oldTaskList, vm.formData]
-              }              
+              }
               task.jobs[currentIndex] = currentJob;
             }
           }
