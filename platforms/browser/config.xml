@@ -15,4 +15,9 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <config-file mode="merge" parent="/*" target="AndroidManifest.xml">
+        <uses-permission android:name="android.permission.CAMERA" />
+        <uses-feature android:name="android.hardware.camera" />
+        <uses-feature android:name="android.hardware.camera.autofocus" />
+    </config-file>
 </widget>

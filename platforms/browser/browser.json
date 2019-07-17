@@ -4,7 +4,29 @@
     "uninstalled": []
   },
   "config_munge": {
-    "files": {}
+    "files": {
+      "AndroidManifest.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
+              "count": 1,
+              "id": "config.xml"
+            },
+            {
+              "xml": "<uses-feature android:name=\"android.hardware.camera\" />",
+              "count": 1,
+              "id": "config.xml"
+            },
+            {
+              "xml": "<uses-feature android:name=\"android.hardware.camera.autofocus\" />",
+              "count": 1,
+              "id": "config.xml"
+            }
+          ]
+        }
+      }
+    }
   },
   "installed_plugins": {
     "cordova-plugin-compat": {

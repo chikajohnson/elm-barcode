@@ -38,6 +38,9 @@
           savedPutaway.currentDoc = putaway.DocumentNo;
           sharedSvc.createStorageParam("UserJob", savedPutaway);
         }
+        else{
+          sharedSvc.createStorageParam("UserJob", { startedDocs: [putaway.DocumentNo], currentDoc: putaway.DocumentNo });
+        }
 
         $rootScope.putaway = putaway;
         $state.go('main.putaway-new');
@@ -214,12 +217,19 @@
     }
 
     $rootScope.$on('BarcodeCaptured', function (evt, data) {
-      $scope.$watch("vm.formData.lotNo", function (newVal, oldVal) {
+      $scope.$watch("vm.formData.PalletteCode", function (newVal, oldVal) {
         if (newVal !== oldVal) {
-          vm.formData.lotNo = "";
+          vm.formData.PalletteCode = "";
         }
-        vm.formData.lotNo = data;
-      })
+        vm.formData.PalletteCode = data;
+      });
+      
+      $scope.$watch("vm.formData.CellCode", function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          vm.formData.CellCode = "";
+        }
+        vm.formData.CellCode = data;
+      });    
       $scope.$apply();
     });
 

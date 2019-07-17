@@ -5,8 +5,8 @@
 		    // Dev Environment
            // serverPath: "http://40.67.200.13:8090/",
            // imagePath: "http://40.67.200.13:8090/uploads/"
-          serverPath: "http://DESKTOP-5647K0E/deployment/",
-          // serverPath: "http://localhost:19072/",
+          // serverPath: "http://DESKTOP-5647K0E/deployment/",
+          serverPath: "http://localhost:19072/",
           imagePath: "http://localhost:60364/uploads/"
 		})
 }());

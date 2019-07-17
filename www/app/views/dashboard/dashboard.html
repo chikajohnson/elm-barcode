@@ -1,12 +1,11 @@
 <div class="container-fluid p-0">
   <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
     <div class="container align-content-center">
-      <a class="navbar-brand font-weight-bolder m-auto py-3 text-light">Dashboard</a>
+      <a class="navbar-brand font-weight-bolder m-auto py-2 text-light">Dashboard</a>
     </div>
   </div>
   <div class="row bg-gray m-0 p-1 py-3 mb-4">
-    <div class="col bg-light rounded text-center ml-1">
-      <span class="font-weight-bolder"><i class="fa fa-home"></i>&nbsp; Elm 2.0</span>
+    <div class="col rounded text-center ml-1">
     </div>
     <div class="col-4 col-sm-2"></div>
     <div class="col bg-light rounded text-center pointer mr-1">
@@ -14,63 +13,58 @@
     </div>
   </div>
   <div class="row text-center m-auto">
-    <!-- <div class="col-6 bg-gray-light">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-primary">
-        <p class="ml-3 mr-3 py-4 mt-4"><i class="fa fa-3x fa-truck" aria-hidden="true"></i></p>
-        <span class=" font-weight-bold">Good Receipt</span>
-        <span class="badge badge-warning rounded-circle p-2" 
-        data-ng-show="vm.job.ReceiptModel.DocCount > 0">{{vm.job.ReceiptModel.DocCount}}</span>
-      </a>
-    </div>
-    <div class="col-6 bg-gray-light">
-      <a data-ng-click="vm.navigateTo('main.putaways',vm.job.PutawayModel.DocCount)" class="pointer text-primary">
-        <p class="bg-gray-light"><i class="fa fa-3x fa-hand-lizard-o" aria-hidden="true"></i></p>
-        <span class="font-weight-bold">Put Away</span>
-        <span class="badge badge-warning rounded-circle p-2 " 
-        data-ng-show="vm.job.PutawayModel.DocCount > 0">{{vm.job.PutawayModel.DocCount}}</span>
-      </a>
-    </div>
-    <div class="col-6 dash-item bg-gray-light">
-      <a data-ng-click="vm.navigateTo('main.picklist', vm.job.ReleaseModel.DocCount)" class="pointer text-primary">
-        <p class="ml-3 mr-3 bg-gray-light py-4 mt-4"><i class="fa fa-3x fa-list" aria-hidden="true"></i></p>
-        <span class="font-weight-bold">Pick List</span>
-        <span class="badge badge-warning rounded-circle p-2" 
-        data-ng-show="vm.job.ReleaseModel.DocCount > 0">{{vm.job.ReleaseModel.DocCount}}</span>
-      </a>
-    </div> -->
   </div>
   <div class="row m-auto text-center dashboard">
-    <div class="col-xs-6 col-sm-5  mx-1 green-light dash-item">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-primary">
-        <p class=""><i class="fa fa-3x fa-truck" aria-hidden="true"></i></p>
+    <div class="col-5  m-1 green-light  dash-item">
+      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-truck" aria-hidden="true"></i></p>
         <span class=" font-weight-bold">Good Receipt</span>
-        <span
-          class="badge badge-danger px-4 py-2 float-right mx-2 font-weight-bolder">4{{vm.job.ReceiptModel.DocCount}}</span>
+        <span class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded"
+          data-ng-show="vm.job.ReceiptModel.DocCount > 0">{{vm.job.ReceiptModel.DocCount}}</span>
       </a>
     </div>
-    <div class="col-xs-6 col-sm-5  mx-1 green-light dash-item">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-primary">
-        <p class=""><i class="fa fa-3x fa-truck" aria-hidden="true"></i></p>
-        <span class=" font-weight-bold">Good Receipt</span>
-        <span
-          class="badge badge-danger px-4 py-2 float-right mx-2 font-weight-bolder">4{{vm.job.ReceiptModel.DocCount}}</span>
+    <div class="col-5  m-1 greenish dash-item">
+      <a data-ng-click="vm.navigateTo('main.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-arrow-circle-down" aria-hidden="true"></i></p>
+        <span class=" font-weight-bold">Transfer Inward</span>
+        <span data-ng-show="vm.job.InwardModel.DocCount > 0"
+          class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
       </a>
     </div>
-    <div class="col-xs-12 col-sm-5  mx-1 green-light dash-item">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-primary">
-        <p class=""><i class="fa fa-3x fa-truck" aria-hidden="true"></i></p>
-        <span class=" font-weight-bold">Good Receipt</span>
-        <span
-          class="badge badge-danger px-4 py-2 float-right mx-2 font-weight-bolder">4{{vm.job.ReceiptModel.DocCount}}</span>
+    <div class="w-100"></div>
+    <div class="col-5  m-1 bluish dash-item">
+      <a data-ng-click="vm.navigateTo('main.putaways',vm.job.PutawayModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-hand-lizard-o" aria-hidden="true"></i></p>
+        <span class=" font-weight-bold">Put Away</span>
+        <span class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded"
+          data-ng-show="vm.job.PutawayModel.DocCount > 0">{{vm.job.PutawayModel.DocCount}}</span>
       </a>
     </div>
-    <div class="col-xs-12 col-sm-5  mx-1 green-light dash-item">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReceiptModel.DocCount)" class="pointer text-primary">
-        <p class=""><i class="fa fa-3x fa-truck" aria-hidden="true"></i></p>
-        <span class=" font-weight-bold">Good Receipt</span>
-        <span
-          class="badge badge-danger px-4 py-2 float-right mx-2 font-weight-bolder">4{{vm.job.ReceiptModel.DocCount}}</span>
+
+    <div class="col-5  m-1 ashy dash-item">
+      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReleaseModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-list" aria-hidden="true"></i></p>
+        <span class=" font-weight-bold">Pick List</span>
+        <span data-ng-show="vm.job.ReleaseModel.DocCount > 0"
+          class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.ReleaseModel.DocCount}}</span>
       </a>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-5  m-1  pinky dash-item">
+      <a data-ng-click="vm.navigateTo('main.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-arrow-circle-up" aria-hidden="true"></i></p>
+        <span class=" font-weight-bold">Stock Release</span>
+        <span data-ng-show="vm.job.InwardModel.DocCount > 0"
+          class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
+      </a>
+    </div>
+    <div class="col-5  m-1 dash-item">
+      <!-- <a data-ng-click="vm.navigateTo('main.inwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
+        <p class=""><i class="fa fa-2x fa-arrow-circle-down" aria-hidden="true"></i></p>
+        <span class=" font-weight-bold">Stock Release</span>
+        <span data-ng-show="vm.job.InwardModel.DocCount > 0"
+          class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
+      </a> -->
     </div>
   </div>
 </div>

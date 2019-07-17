@@ -1,14 +1,14 @@
 ﻿"use strict";
-angular.module("app").factory("authInterceptorService", ["$q","$injector","$location", "$window",
-  function($q, $injector, $location, $window) {
+angular.module("app").factory("authInterceptorService", ["$q", "$injector", "$location", "$window",
+  function ($q, $injector, $location, $window) {
     var authInterceptorServiceFactory = {};
 
-    var _request = function(config) {
+    var _request = function (config) {
       var storage = $injector.get('sharedSvc');
 
       config.headers = config.headers || {};
       var authData = storage.getStorage("authorizationData");
-      if(authData === null){
+      if (authData === null) {
         $window.location.href = "#/access/login";
       }
 
@@ -18,15 +18,15 @@ angular.module("app").factory("authInterceptorService", ["$q","$injector","$loca
       return config;
     };
 
-    var _responseError = function(rejection) {
-      if(rejection.status === -1){
+    var _responseError = function (rejection) {
+      if (rejection.status === -1) {
         throw new Error('No network connection, try again later.');
-       }
+      }
       else if (rejection.status === 401) {
         //$location.path('/login');
         $window.location.href = "#/access/login";
       }
-      else if(rejection.status === 409){
+      else if (rejection.status === 409) {
         $window.location.href = "#/error/403";
       }
       return $q.reject(rejection);

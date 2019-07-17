@@ -51,7 +51,7 @@ var app = {
                 if (!result.cancelled) source.value = result.text;
             },
                 function (error) {
-                    alert("Scanning failed: " + error);
+                    // alert("Scanning failed: " + error);
                 },
                 {
                     preferFrontCamera: false, // iOS and Android
@@ -65,7 +65,7 @@ var app = {
 
                     // formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
 
-                    // orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                    orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
 
                     disableAnimations: true, // iOS
 

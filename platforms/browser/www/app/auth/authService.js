@@ -1,65 +1,73 @@
 ﻿'use strict';
 angular.module('common.services')
-.factory('authService', ['$http', '$q', 'sharedSvc', 'appSettings', function ($http, $q, sharedSvc, appSettings) {
+    .factory('authService', ['$http', '$q', 'sharedSvc', 'appSettings', function ($http, $q, sharedSvc, appSettings) {
 
-    var authServiceFactory = {};
+        var authServiceFactory = {};
 
-    var _authentication = {
-        isAuth: false,
-        userName: ""
-    };
+        var _authentication = {
+            isAuth: false,
+            userName: ""
+        };
 
-   
-    var _login = function (loginData) {
 
-        // var data = "grant_type=password&username=" + loginData.email + "&password=" + loginData.password;
-        var data = encodeURIComponent('grant_type') + '=' + encodeURIComponent('password') + '&' + encodeURIComponent('userName') + '=' + encodeURIComponent(loginData.userName) + '&' + encodeURIComponent('password') + '=' + encodeURIComponent(loginData.password);
+        var _login = function (loginData) {
 
-        var deferred = $q.defer();
+            // var data = "grant_type=password&username=" + loginData.email + "&password=" + loginData.password;
+            var data = encodeURIComponent('grant_type') + '=' + encodeURIComponent('password') + '&' + encodeURIComponent('userName') + '=' + encodeURIComponent(loginData.userName) + '&' + encodeURIComponent('password') + '=' + encodeURIComponent(loginData.password);
 
-        $http.post(appSettings.serverPath + 'token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded'  }})
-        .then(function (response) {
-            sharedSvc.createStorageParam('authorizationData', { token: response.data.access_token, userName: loginData.userName });
-            sharedSvc.createStorageParam('userDetails', {userGroup: response.data.roles, userId: response.data.userId})
+            var deferred = $q.defer();
 
-            _authentication.isAuth = true;
-            _authentication.userName = loginData.userName;
+            $http.post(appSettings.serverPath + 'token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (response) {
+                    sharedSvc.createStorageParam('authorizationData', { token: response.data.access_token, userName: loginData.userName });
+                    sharedSvc.createStorageParam('userDetails', { userGroup: response.data.roles, userId: response.data.userId })
 
-            deferred.resolve(response);
+                    _authentication.isAuth = true;
+                    _authentication.userName = loginData.userName;
 
-        }, function (err, status) {
-            _logOut();
-            deferred.reject(err);
-        })
+                    deferred.resolve(response);
 
-        return deferred.promise;
+                }, function (err, status) {
+                    _logOut();
+                    deferred.reject(err);
+                })
 
-    };
+            return deferred.promise;
 
-    var _logOut = function () {
+        };
 
-        sharedSvc.clearStorageParam('authorizationData');
-        sharedSvc.clearStorageParam('userGroup');
-        sharedSvc.resetStorageParam();
+        var _logOut = function () {
 
-        _authentication.isAuth = false;
-        _authentication.userName = "";
+            sharedSvc.clearStorageParam('authorizationData');
+            sharedSvc.clearStorageParam('userGroup');
+            sharedSvc.clearStorageParam('userDetails');
+            sharedSvc.clearStorageParam('fullName');
+            sharedSvc.clearStorageParam('thedepot');
+            sharedSvc.clearStorageParam('theclient');
+            sharedSvc.clearStorageParam('thegroup');
+            sharedSvc.clearStorageParam('changePassword');
+            sharedSvc.clearStorageParam('groupName');
+            sharedSvc.clearStorageParam('dashboardName');
+            sharedSvc.clearStorageParam('UserID');
 
-    };
+            _authentication.isAuth = false;
+            _authentication.userName = "";
 
-    var _fillAuthData = function () {
+        };
 
-        var authData = sharedSvc.getStorage('authorizationData');
-        if (authData) {
-            _authentication.isAuth = true;
-            _authentication.userName = authData.userName;
+        var _fillAuthData = function () {
+
+            var authData = sharedSvc.getStorage('authorizationData');
+            if (authData) {
+                _authentication.isAuth = true;
+                _authentication.userName = authData.userName;
+            }
+
         }
 
-    }
+        authServiceFactory.login = _login;
+        authServiceFactory.logOut = _logOut;
+        authServiceFactory.fillAuthData = _fillAuthData;
 
-    authServiceFactory.login = _login;
-    authServiceFactory.logOut = _logOut;
-    authServiceFactory.fillAuthData = _fillAuthData;
-
-    return authServiceFactory;
-}]);
+        return authServiceFactory;
+    }]);

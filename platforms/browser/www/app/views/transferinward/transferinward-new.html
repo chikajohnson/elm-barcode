@@ -1,0 +1,87 @@
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
+  <div class="col-12">
+    <div class="row  text-light text-center py-2">
+      <div class="col-2 float-left pr-0 mr-0">
+        <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.transferinwards"></i>
+      </div>
+      <div class="col-8 mx-auto font-weight-bolder">
+        {{vm.tranferInward.DocumentNo}}
+      </div>
+      <div class="col-2 float-right">
+        <i class="fa fa-2x cart fa-cart-arrow-down pointer" data-ng-show="vm.savedTasks.length > 0"
+          ui-sref="main.transferinward-view">
+          <span class="badge badge-warning rounded-circle px-2 ">{{vm.savedTasks.length}}</span>
+        </i>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="page-header" id="banner">
+    <div class="row">
+      <div class="col-sm-12">
+        <form class="text-left">
+          <fieldset>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
+              <input class="form-control rounded-pill bg-light" id="barcode" aria-describedby="lotHelp" type="text"
+                placeholder="Lot No" data-ng-model="vm.formData.lotNo">
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="product">Product</label>
+              <select required class="form-control rounded-pill bg-light" id="product" data-ng-model="vm.product"
+                data-ng-options="item as item.ProductName for item in vm.products"
+                data-ng-change="vm.setSelectedProduct(vm.product)">
+                <option value="">Select Product</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="font-weight-bolder" for="batch">Batch</label>
+                    <select class="form-control rounded-pill bg-light" id="batch" data-ng-model="vm.batch"
+                      data-ng-options="item as item.BatchID for item in vm.batches"
+                      data-ng-change="vm.setSelectedBatch(vm.batch)">
+                      <option value="">Select Batch</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="font-weight-bolder" for="batch"> Measures</label>
+                    <select class="form-control rounded-pill bg-light font-weight-normal" id="productMeasure"
+                      data-ng-model="vm.receivedQtyMeasure"
+                      data-ng-options="item as item.ReceivedQtyMeasurementUnit for item in vm.productMeasures"
+                      data-ng-change="vm.setSelectedMeasure(vm.receivedQtyMeasure)">
+                      <option value="">Select Measure</option>
+                    </select>
+                  </div>
+                </div>
+              </div>             
+            </div>
+            <div class="form-group">
+                <label class="font-weight-bolder" for="qty">Quantity</label>
+                <input class="form-control rounded-pill bg-light" id="qty" aria-describedby="qtyHelp" type="number"
+                  placeholder="Quantity" data-ng-model="vm.formData.quantity">
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="batch">Stock State</label>
+              <select class="form-control rounded-pill bg-light" id="stockstate" data-ng-model="vm.stockState"
+                data-ng-options="item as item.StockState for item in vm.stockStates"
+                data-ng-change="vm.setSelectedStockState(vm.stockState)">
+                <option value="">Select Stock State</option>
+              </select>
+            </div>
+            <div class="form-group text-center">
+              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" data-ng-click="vm.save(vm.formData)"
+                type="submit">Save</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

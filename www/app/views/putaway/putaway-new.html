@@ -5,9 +5,10 @@
         <i class="fa fa-2x  fa-arrow-circle-left" ui-sref="main.putaways"></i>
       </div>
       <div class="col-8 mx-auto font-weight-bolder">
-        CHE-0001-SPA
+          {{vm.putaway.DocumentNo}}
       </div>
       <div class="col-2 float-right">
+        
       </div>
     </div>
   </div>
@@ -20,16 +21,16 @@
           <fieldset>
             <div class="form-group">
               <label class="font-weight-bolder" for="location">Location</label>
-              <input class="form-control rounded-pill bg-light" id="location" aria-describedby="locationHelp"
-                type="text" placeholder="location" data-ng-model="vm.formData.location">
+              <input class="form-control rounded-pill bg-light barcode" id="location"  aria-describedby="locationHelp"
+                type="text" placeholder="location" data-ng-model="vm.formData.CellCode">
             </div>
             <div class="form-group putaway-lot">
-              <label class="font-weight-bolder" for="lotNo">Lot No.</label>
-              <input class="form-control rounded-pill bg-light " id="lotNo" aria-describedby="lotHelp" type="number"
-                placeholder="Lot No" data-ng-model="vm.formData.lotNo">
-              <a class="view badge bg-warning text-light rounded px-3" data-ng-click="vm.toggleDetail()">{{vm.showDetail ? "hide" : "view"}}</a>
+              <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
+              <input class="form-control rounded-pill bg-light barcode" id="palletteCode" aria-describedby="lotHelp" type="number"
+                placeholder="Lot No" data-ng-model="vm.formData.PalletteCode">
+              <!-- <a class="view badge bg-warning text-light rounded px-3" data-ng-click="vm.toggleDetail()">{{vm.showDetail ? "hide" : "view"}}</a> -->
             </div>
-            <div class="card text-left mx-1 rounded bg-gray-light " data-ng-show="vm.showDetail">
+            <!-- <div class="card text-left mx-1 rounded bg-gray-light " data-ng-show="vm.showDetail">
               <div class="card-body font-weight-bolder">
                 <h5 class=""><strong>Details - 093389FGR</strong></h5>
                 <hr class="my-1">
@@ -38,7 +39,7 @@
                 <h6><strong>Putaway Location: CELL001</strong></h6>
                 <h6><strong>Quantity: 1500</strong></h6>
               </div>
-            </div>
+            </div> -->
             <div class="form-group text-center mt-5">
               <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" data-ng-click="vm.save()" type="submit">save</button>
             </div>

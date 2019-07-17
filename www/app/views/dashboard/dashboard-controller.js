@@ -16,7 +16,7 @@
 
 
     vm.navigateTo = function(path, count){
-      if (count <= 0) {
+      if ( count === undefined || count <= 0) {
         toastr.warning("This job has not been assigned to you yet!")
         return;
       }

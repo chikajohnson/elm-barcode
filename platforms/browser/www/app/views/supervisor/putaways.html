@@ -1,0 +1,35 @@
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
+  <div class="col-12">
+    <div class="row  text-light text-center py-2">
+      <div class="col-2 float-left pr-0 mr-0 pt-1">
+        <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="index.dashboard"></i>
+      </div>
+      <div class="col-8 mx-auto font-weight-bolder">
+        <a class="navbar-brand font-weight-bolder m-auto text-light">Putaway Notes</a>
+      </div>
+      <div class="col-2 float-right">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="page-header mt-0" id="banner">
+    <div class="row mt-0">
+      <span class=" badge bg-gray-light mt-0 mb-2 ml-3 text-secondary">
+        &nbsp;&nbsp; total documents : {{vm.putaways.DocCount}}
+      </span>
+      <ul class="list-group w-100">
+        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder"
+          data-ng-repeat="item in vm.putaways.StockPutAways">
+          ({{$index + 1}}) &nbsp; {{item.DocumentNo}}
+          <button class="btn btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity " 
+          data-ng-class="vm.startedDocs.includes(item.DocumentNo)? 'btn-warning' : 'btn-primary'"
+            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.includes(item.DocumentNo) ? 'continue' : 'start job'}}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>

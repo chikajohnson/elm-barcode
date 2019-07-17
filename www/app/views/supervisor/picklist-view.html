@@ -1,0 +1,84 @@
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
+    <div class="col-12">
+        <div class="row  text-light text-center py-3">
+            <div class="col-2 float-left pr-0 mr-0">
+                <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
+            </div>
+            <div class="col-8 mx-auto font-weight-bolder">
+                {{vm.task.documentNo}}
+            </div>
+            <div class="col-2 float-right">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="page-header" id="banner">
+
+        <div id="accordion" class="w-100 m-0 p-0">
+            <div class="row pl-4 pb-2 font-weight-bold" data-ng-show="vm.task.tasks.length > 0">
+                <span >Completed tasks ({{vm.task.tasks.length}})</span> 
+            </div>
+            <div class="card" data-ng-repeat="task in vm.task.tasks">
+                <div class="card-header mb-0 p-2">
+                    <p class="card-link">
+                        <span class="float-left font-weight-bolder">
+                            <span class="text-dark">({{$index + 1}})</span>
+                            &nbsp; &nbsp;<span class="px-4 py-1 bg-light text-primary rounded pointer"
+                                data-toggle="collapse" href="#collapse{{ $index + 1 }}"
+                                title="click to view detail">{{task.location}} </span>
+                        </span>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2"
+                            type="button">
+                            <i class="fa  fa-2x fa-trash " title="delete task"
+                                data-ng-click="vm.deleteTask(task.location)"></i>
+                        </span>
+                    </p>
+                </div>
+                <div id="collapse{{ $index + 1 }}" class="collapse pt-0 mt-0" data-parent="#accordion">
+                    <div class="card-body text-left bg-light">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class=" font-weight-bolder">Product Code:
+                                    &nbsp;</span>{{task.productID}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Product Name:
+                                    &nbsp;</span>{{task.productName}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Batch:
+                                    &nbsp;</span>{{task.batchID}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Quantity:
+                                    &nbsp;</span>{{task.quantity}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder"> Measurement Unit:
+                                    &nbsp;</span>{{task.receivedQtyMeasurementUnit}}</li>
+                            <li class="list-group-item"><span class=" font-weight-bolder">Stock State:
+                                    &nbsp;</span>{{task.stockStateName}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-auto text-center mt-5" data-ng-show="vm.task.tasks.length > 0">
+            <div class="col-6">
+                <div class="form-group text-center">
+                    <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.submit()"
+                        type="submit">Submit</button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group text-center">
+                    <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill"
+                        data-ng-click="vm.endJob(vm.task.documentNo)" type="submit">End Job</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-auto text-center mt-5" data-ng-show="vm.task.tasks.length === 0">
+            <div class="col">
+                <div class="form-group text-center">
+                    <h6 class="font-weight-bolder p-3 bg-gray-light">There is no available tasks for document<br>
+                        ({{vm.task.documentNo}})</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

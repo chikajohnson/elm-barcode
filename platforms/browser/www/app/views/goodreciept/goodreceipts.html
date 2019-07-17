@@ -2,13 +2,13 @@
   <div class="col-12">
     <div class="row  text-light text-center py-2">
       <div class="col-2 float-left pr-0 mr-0 pt-1">
-        <i class="fa fa-2x  fa-arrow-circle-left pointer"  ui-sref="index.dashboard"></i>
+        <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="index.dashboard"></i>
       </div>
       <div class="col-8 mx-auto font-weight-bolder">
         <a class="navbar-brand font-weight-bolder m-auto text-light">Good Reciept Notes</a>
       </div>
       <div class="col-2 float-right">
-        
+
       </div>
     </div>
   </div>
@@ -17,26 +17,17 @@
 <div class="container-fluid">
   <div class="page-header mt-0" id="banner">
     <div class="row mt-0">
-      <span class=" badge bg-gray-light mt-0 mb-2 ml-3 text-secondary">
-        &nbsp;&nbsp; total documents : 4
-      </span>
+      <!-- <span class=" badge bg-gray-light mt-0 mb-2 ml-3 text-secondary">
+        &nbsp;&nbsp; total documents : {{vm.goodReceipts.DocCount}}
+      </span> -->
       <ul class="list-group w-100">
-        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder">
-          (1) &nbsp; CHE-0001-WB
-          <button class="btn btn-primary btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity" data-ng-click="vm.showDetail()" type="button">Start</button>
+        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder"
+          data-ng-repeat="item in vm.goodReceipts.GoodReceiveNotes">
+          ({{$index + 1}}) &nbsp; {{item.DocumentNo}}
+          <button class="btn btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity " 
+          data-ng-class="vm.startedDocs.includes(item.DocumentNo)? 'btn-warning' : 'btn-primary'"
+            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.includes(item.DocumentNo) ? 'continue' : 'start job'}}</button>
         </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder">
-          (2) &nbsp; CHE-0002-WB
-          <button class="btn btn-primary btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity" data-ng-click="vm.showDetail()" type="button">Start</button>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder">
-          (3) &nbsp; CHE-0003-WB
-          <button class="btn btn-primary btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity" data-ng-click="vm.showDetail()" type="button">Start</button>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder">
-            (4) &nbsp; CHE-0004-WB
-            <button class="btn btn-primary btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity" data-ng-click="vm.showDetail()" type="button">Start</button>
-          </li>
       </ul>
     </div>
   </div>

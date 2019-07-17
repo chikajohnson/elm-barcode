@@ -6,6 +6,7 @@
     vm.goodReceipts = [];
     vm.startedDocs = [];
 
+
     let job = sharedSvc.getStorage("UserJob");
     if (job && job.startedDocs && job.startedDocs.length > 0) {
       vm.startedDocs = job.startedDocs;
@@ -37,6 +38,10 @@
           }
           savedReceipt.currentDoc = receipt.DocumentNo;
           sharedSvc.createStorageParam("UserJob", savedReceipt);
+        }
+        else{
+          sharedSvc.createStorageParam("UserJob", { startedDocs: [receipt.DocumentNo], currentDoc: receipt.DocumentNo });
+
         }
 
         $rootScope.goodReceipt = receipt;
@@ -176,6 +181,7 @@
           let currentStartedDocs = vm.job.startedDocs.filter(x => x !== docNo);
           if (currentStartedDocs.length === 0) {
             delete vm.job.startedDocs;
+            delete vm.job.currentDoc;
           }
           if (remainingJobs.length === 0) {
               delete vm.job.jobs;
@@ -330,7 +336,8 @@
       }
 
       sharedSvc.createStorageParam('UserJob', task);
-      $state.go("main.goodreciept-view");
+      // $state.go("main.goodreciept-view");
+      $state.reload();
       toastr.success("save successfully")
     };
 
@@ -353,7 +360,8 @@
             batch = {
               BatchID: prod.BatchID,
               BatchManufaturingDate: prod.BatchManufaturingDate,
-              BatchExpiringDate: prod.BatchExpiringDate
+              BatchExpiringDate: prod.BatchExpiringDate,
+              ProductID: prod.ProductID
             }
             vm.batches.push(batch);
           }
@@ -368,10 +376,21 @@
               ReceivedQuantity: prod.ReceivedQuantity,
               ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
               ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+              ProductID: prod.ProductID
             }
             vm.productMeasures.push(measure);
           }
         })
+      }
+    }
+    vm.setSelectedProduct = function (item) {
+      if (item !== undefined || item !== null) {
+        vm.formData.productID = item.ProductID;
+        vm.formData.productName = item.ProductName;
+        vm.formData.productUniqueID = item.ProductUniqueID;
+
+        vm.batches = vm.batches.filter(x => x.ProductID === item.ProductID);
+        vm.productMeasures = vm.productMeasures.filter(x => x.ProductID === item.ProductID);
       }
     }
 
@@ -400,13 +419,7 @@
       }
     }
 
-    vm.setSelectedProduct = function (item) {
-      if (item !== undefined || item !== null) {
-        vm.formData.productID = item.ProductID;
-        vm.formData.productName = item.ProductName;
-        vm.formData.productUniqueID = item.ProductUniqueID;
-      }
-    }
+    
 
   }]);
 })()

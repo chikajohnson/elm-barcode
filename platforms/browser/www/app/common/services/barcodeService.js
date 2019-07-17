@@ -9,15 +9,18 @@
 
             // Barcode Implementation
             function loadBarcodeScanner() {
-                alert("loading scanner");
-                var element = document.querySelector("#barcode");
-                if (element !== undefined) {
-                    element.addEventListener("click", function (event) {
-                        scanBarCode(event.target);
-                    })
-                }
-                alert('Event attached to DOM successfully');
-                console.log(element);
+                // alert("loading scanner");
+                var elements = document.querySelectorAll(".barcode");
+                elements.forEach(element => {
+                    if (element !== undefined) {
+                        element.addEventListener("click", function (event) {
+                            scanBarCode(event.target);
+                        })
+                    }
+                    // alert('Event attached to DOM successfully');
+                    console.log(element);
+                });
+
             }
 
             function scanBarCode(source) {
@@ -30,7 +33,7 @@
                         }
                     },
                     function (error) {
-                        alert("Scanning failed: " + error);
+                        // alert("Scanning failed: " + error);
                     },
                     {
                         preferFrontCamera: false, // iOS and Android
