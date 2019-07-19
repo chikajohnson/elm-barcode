@@ -97,7 +97,7 @@ app.run(function ($rootScope, authService, appSettings, localStorageService, $st
   $rootScope.baseImageUrl = appSettings.imagePath;
   $rootScope.showAdminMenu = false;
   $rootScope.copyrightDate = new Date();
-  $rootScope.nonSupervisorRoles = ["counter", "dispatcher", "checker"];
+  $rootScope.nonSupervisorRoles = ["counter", "dispatcher", "checker", "picker"];
 
   $rootScope.Refresh = function () {
     $state.reload();

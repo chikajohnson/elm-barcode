@@ -259,8 +259,7 @@
 
       //get  putaway note detail from which the pallet comes from
       let putawayDetail = vm.putaway.StockPutAwayDetails.find((x) => {
-        return x.ProductID === vm.formData.productID && x.BatchID === vm.formData.batchID
-          && x.ReceivedQtyMeasurementUnit === vm.formData.receivedQtyMeasurementUnit
+        return x.location === vm.formData.location && x.CellCode === vm.formData.CellCode
       })
 
       vm.formData = {
@@ -269,6 +268,8 @@
         detailID: putawayDetail.ID,
         parentID: putawayDetail.StockPutAwayID,
         status: "Pending",
+        location: vm.formData.location,
+        cellCode: vm.formData.cellCode,
         palletteNo: vm.formData.lotNo,
         donorID: putawayDetail.DonoID,
         serialNoEnd: putawayDetail.SerialNoEnd,

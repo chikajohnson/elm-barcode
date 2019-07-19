@@ -7,16 +7,13 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-barcodescanner": {
-      "PACKAGE_NAME": "com.netop.barcodedemo"
-    },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.netop.barcodedemo"
+      "PACKAGE_NAME": "com.netop.elmbarcode"
+    },
+    "phonegap-plugin-barcodescanner": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "com.netop.elmbarcode"
     }
   },
-  "dependent_plugins": {
-    "cordova-plugin-compat": {
-      "PACKAGE_NAME": "com.netop.barcodedemo"
-    }
-  }
+  "dependent_plugins": {}
 }

@@ -1,14 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.netop.barcodedemo" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>barcode-demo</name>
+<widget id="com.netop.elmbarcode" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>ELMBarcode</name>
     <description>
-        barcode-demo
+        A sample Apache Cordova application that responds to the deviceready event.
     </description>
-    <author email="johnson.iyida@netong.com" href="http://netopng.com">
-        Netop Barcode Team
+    <author email="dev@cordova.apache.org" href="http://cordova.io">
+        Apache Cordova Team
     </author>
     <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
+    <allow-navigation href="http://*/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -22,11 +24,4 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <plugin name="cordova-plugin-whitelist" spec="1" />
-    
-    <config-file target="AndroidManifest.xml" parent="/*" mode="merge">
-        <uses-permission android:name="android.permission.CAMERA" />
-        <uses-feature android:name="android.hardware.camera" />
-        <uses-feature android:name="android.hardware.camera.autofocus" />
-    </config-file>
 </widget>
