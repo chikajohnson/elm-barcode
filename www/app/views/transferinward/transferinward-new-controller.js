@@ -87,7 +87,7 @@
         // alert("theres is no transfer ");
       }
     } else {
-      // alert("theres no to load  GR");
+      // alert("theres no to load  TRF");
     }
 
 
@@ -149,7 +149,7 @@
         $state.go('index.dashboard');
       } else {
         var product, batch, measure = {}
-        // alert("about to iterate GR details");
+        // alert("about to iterate TRF details");
         trfInward.GoodTransferInwardDetails.forEach(function (prod) {
           // alert("iterating detail");
           product = {
@@ -264,7 +264,7 @@
       vm.formData = {
         documentNo: vm.transferInwards[0].DocumentNo,
         detailID: noteDetails[0].ID,
-        parentID: noteDetails[0].GoodReceiveNoteID,
+        parentID: noteDetails[0].GoodTransferInwardID,
         status: "Pending",
         palletteNo: vm.formData.lotNo,
         donorID: noteDetails[0].DonoID,

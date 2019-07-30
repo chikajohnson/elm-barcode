@@ -1,0 +1,91 @@
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
+  <div class="col-12">
+    <div class="row  text-light text-center py-2">
+      <div class="col-2 float-left pr-0 mr-0">
+        <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.transferinward-view"></i>
+      </div>
+      <div class="col-8 mx-auto font-weight-bolder">
+        Edit &nbsp;&nbsp;{{vm.goodInwards[0].DocumentNo}}
+      </div>
+      <div class="col-2 float-right">
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="page-header" id="banner">
+    <div class="row">
+      <div class="col-sm-12">
+        <form class="text-left" name="inwardForm" autocomplete="on">
+          <fieldset>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
+              &nbsp; <span class="text-danger" data-ng-show='inwardForm.barcode.$invalid'>* </span>
+              <input class="form-control rounded-pill bg-light barcode" id="barcode" name="barcode" aria-describedby="lotHelp" type="text"
+                placeholder="Pallette No" data-ng-model="vm.formData.lotNo" required>
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="product">Product</label>
+              &nbsp; <span class="text-danger" data-ng-show='inwardForm.product.$invalid'>* </span>
+              <select required class="form-control rounded-pill bg-light" id="product" name="product" data-ng-model="vm.product"
+                data-ng-options="item.ProductID as item.ProductID for item in vm.products"
+                data-ng-change="vm.setSelectedProduct(vm.product)" required>
+                <option value="">Select Product</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <div class="row">
+                <div class="col-6">
+                    <label class="font-weight-bolder" for="batch">Batch</label>
+                    &nbsp; <span class="text-danger" data-ng-show='inwardForm.batch.$invalid'>* </span>
+                    <select class="form-control rounded-pill bg-light" id="batch" name="batch" data-ng-model="vm.batch"
+                      data-ng-options="item.BatchID as item.BatchID for item in vm.batches"
+                      data-ng-change="vm.setSelectedBatch(vm.batch)" required>
+                      <option value="">Select Batch</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="font-weight-bolder" for="batch"> Measures</label>
+                    &nbsp; <span class="text-danger" data-ng-show='inwardForm.productmeasure.$invalid'>* </span>
+                    <select class="form-control rounded-pill bg-light font-weight-normal" id="productMeasure" name="productmeasure"
+                      data-ng-model="vm.receivedQtyMeasure"
+                      data-ng-options="item.MeasurementID as item.ReceivedQtyMeasurementUnit for item in vm.productMeasures"
+                      data-ng-change="vm.setSelectedMeasure(vm.receivedQtyMeasure)" required>
+                      <option value="">Select Measure</option>
+                    </select>
+                  </div>
+              </div>             
+            </div>
+            <div class="form-group">
+                <label class="font-weight-bolder" for="qty">Quantity</label>
+                &nbsp; <span class="text-danger" data-ng-show='inwardForm.qty.$invalid'>* </span>
+                <input class="form-control rounded-pill bg-light" id="qty" name="qty" aria-describedby="qtyHelp" type="number"
+                  placeholder="Quantity" data-ng-model="vm.formData.quantity" required> 
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bolder" for="batch">Stock State</label>
+              &nbsp; <span class="text-danger" data-ng-show='inwardForm.stockstate.$invalid'>* </span>
+              <!-- <select class="form-control rounded-pill bg-light" id="stockstate" name="stockstate" data-ng-model="vm.stockState"  data-ng-options="item.stockStateName as item.StockState for item in vm.stockStates"
+                data-ng-change="vm.setSelectedStockState(vm.stockState)" required>
+                <option value="">Select Stock State</option>
+              </select> -->
+              <select class="form-control rounded-pill bg-light font-weight-normal" id="stockstate" name="stockstate"
+                      data-ng-model="vm.stockState"
+                      data-ng-options="item.StockState as item.StockState for item in vm.stockStates"
+                      data-ng-change="vm.setSelectedStockState(vm.stockState)" required>
+                      <option value="">Select Measure</option>
+                    </select>
+            </div>
+            <div class="form-group text-center">
+              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" 
+               data-ng-click="vm.save(vm.formData)"    type="submit" data-ng-disabled="inwardForm.$invalid" > Update</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
