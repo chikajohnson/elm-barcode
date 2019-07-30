@@ -5,9 +5,10 @@
     var vm = this;
     vm.putaways = [];
     vm.startedDocs = [];
+    vm.location = "";
 
     let job = sharedSvc.getStorage("UserJob");
-    if(job && job.startedDocs && job.startedDocs.length > 0){
+    if (job && job.startedDocs && job.startedDocs.length > 0) {
       vm.startedDocs = job.startedDocs;
     }
 
@@ -38,7 +39,7 @@
           savedPutaway.currentDoc = putaway.DocumentNo;
           sharedSvc.createStorageParam("UserJob", savedPutaway);
         }
-        else{
+        else {
           sharedSvc.createStorageParam("UserJob", { startedDocs: [putaway.DocumentNo], currentDoc: putaway.DocumentNo });
         }
 
@@ -65,10 +66,10 @@
     if (vm.job && vm.job.jobs) {
       vm.currentDoc = vm.job.currentDoc;
       let result = vm.job.jobs.find(x => x.documentNo === vm.currentDoc);
-      if(result !== undefined){
+      if (result !== undefined) {
         vm.task = result;
       }
-      else{
+      else {
         toastr.warning("You have not saved any task for doccument:  " + vm.currentDoc);
         $state.go('main.putaways');
       }
@@ -89,7 +90,7 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        submitTasks();        
+        submitTasks();
       }, function () {
         //$state.go('index.dashboard') 
       });
@@ -131,7 +132,7 @@
           let tasks = vm.task.tasks.filter((x) => x.lotNo !== lotNo);
 
           vm.job.jobs.map(x => {
-            if(x.documentNo === vm.currentDoc){
+            if (x.documentNo === vm.currentDoc) {
               x.tasks = tasks
             }
           })
@@ -203,6 +204,10 @@
     let depotCode = sharedSvc.getStorage('thedepot');
     var stockStateRepository = sharedSvc.initialize('api/stockstates/' + clientId + "/" + depotCode);
 
+    if (vm.putaway === null || vm.putaway === undefined) {
+      $state.go('main.putaways');
+    }
+
     stockStateRepository.get(function (response) {
       vm.stockStates = response.result;
     });
@@ -223,13 +228,13 @@
         }
         vm.formData.PalletteCode = data;
       });
-      
+
       $scope.$watch("vm.formData.CellCode", function (newVal, oldVal) {
         if (newVal !== oldVal) {
           vm.formData.CellCode = "";
         }
         vm.formData.CellCode = data;
-      });    
+      });
       $scope.$apply();
     });
 
@@ -244,7 +249,7 @@
       }
     }
 
-    vm.toggleDetail =   function () {
+    vm.toggleDetail = function () {
       vm.showDetail = !vm.showDetail;
     }
 
@@ -259,8 +264,7 @@
 
       //get  putaway note detail from which the pallet comes from
       let putawayDetail = vm.putaway.StockPutAwayDetails.find((x) => {
-        return x.ProductID === vm.formData.productID && x.BatchID === vm.formData.batchID
-          && x.ReceivedQtyMeasurementUnit === vm.formData.receivedQtyMeasurementUnit
+        return x.location === vm.formData.location && x.CellCode === vm.formData.CellCode
       })
 
       vm.formData = {
@@ -269,6 +273,8 @@
         detailID: putawayDetail.ID,
         parentID: putawayDetail.StockPutAwayID,
         status: "Pending",
+        location: vm.formData.location,
+        cellCode: vm.formData.cellCode,
         palletteNo: vm.formData.lotNo,
         donorID: putawayDetail.DonoID,
         serialNoEnd: putawayDetail.SerialNoEnd,
@@ -314,15 +320,15 @@
             let currentIndex = task.jobs.findIndex(x => x.type === 'putaway' && x.documentNo == vm.putaway.DocumentNo);
             if (currentIndex !== -1) {
               let oldTaskList = currentJob.tasks;
-              
+
               let lotIndex = oldTaskList.findIndex(x => x.lotNo === vm.formData.lotNo);
-              if(lotIndex !== -1){
-                oldTaskList[lotIndex] = {...oldTaskList[lotIndex], ...vm.formData};
+              if (lotIndex !== -1) {
+                oldTaskList[lotIndex] = { ...oldTaskList[lotIndex], ...vm.formData };
                 currentJob.tasks = [...oldTaskList]
               }
-              else{
+              else {
                 currentJob.tasks = [...oldTaskList, vm.formData]
-              }              
+              }
               task.jobs[currentIndex] = currentJob;
             }
           }

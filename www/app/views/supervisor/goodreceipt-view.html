@@ -7,7 +7,7 @@
             <div class="col-8 mx-auto font-weight-bolder">
                 {{vm.currentDocNo}}
             </div>
-            <div class="col-2 float-right">
+            <div class="col-2 float-right" ng-include="'app/common/partial/supervisor-home.html'">
             </div>
         </div>
     </div>
@@ -26,6 +26,8 @@
                                     &nbsp;</span>{{task.PalletNo}}</li>
                         <li class="list-group-item"><span class=" font-weight-bolder">Product Code:
                                 &nbsp;</span>{{task.ProductID}}</li>
+                                <li class="list-group-item"><span class=" font-weight-bolder">Product Name:
+                                    &nbsp;</span>{{task.ProductName}}</li>
                         <li class="list-group-item"><span class=" font-weight-bolder">Batch:
                                 &nbsp;</span>{{task.BatchID}}</li>
                         <li class="list-group-item"><span class=" font-weight-bolder">Quantity:

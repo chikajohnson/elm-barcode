@@ -50,6 +50,8 @@ angular.module('common.services')
             sharedSvc.clearStorageParam('dashboardName');
             sharedSvc.clearStorageParam('UserID');
 
+            sharedSvc.resetStorageParam();
+
             _authentication.isAuth = false;
             _authentication.userName = "";
 

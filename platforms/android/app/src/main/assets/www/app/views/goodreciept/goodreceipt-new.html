@@ -5,7 +5,7 @@
         <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
       </div>
       <div class="col-8 mx-auto font-weight-bolder">
-        {{vm.goodReceipt.DocumentNo}}
+        {{vm.goodReceipts[0].DocumentNo}}
       </div>
       <div class="col-2 float-right">
         <i class="fa fa-2x cart fa-cart-arrow-down pointer" data-ng-show="vm.savedTasks.length > 0"
@@ -24,13 +24,13 @@
           <fieldset>
             <div class="form-group">
               <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
-              <input class="form-control rounded-pill bg-light barcode" aria-describedby="lotHelp" type="text"
+              <input class="form-control rounded-pill bg-light barcode" id="barcode" aria-describedby="lotHelp" type="text"
                 placeholder="Pallette No" data-ng-model="vm.formData.lotNo">
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="product">Product</label>
               <select required class="form-control rounded-pill bg-light" id="product" data-ng-model="vm.product"
-                data-ng-options="item as item.ProductName for item in vm.products"
+                data-ng-options="item as item.ProductID for item in vm.products"
                 data-ng-change="vm.setSelectedProduct(vm.product)">
                 <option value="">Select Product</option>
               </select>
@@ -39,17 +39,14 @@
             <div class="form-group">
               <div class="row">
                 <div class="col-6">
-                  <div class="form-group">
                     <label class="font-weight-bolder" for="batch">Batch</label>
                     <select class="form-control rounded-pill bg-light" id="batch" data-ng-model="vm.batch"
                       data-ng-options="item as item.BatchID for item in vm.batches"
                       data-ng-change="vm.setSelectedBatch(vm.batch)">
                       <option value="">Select Batch</option>
                     </select>
-                  </div>
                 </div>
                 <div class="col-6">
-                  <div class="form-group">
                     <label class="font-weight-bolder" for="batch"> Measures</label>
                     <select class="form-control rounded-pill bg-light font-weight-normal" id="productMeasure"
                       data-ng-model="vm.receivedQtyMeasure"
@@ -58,7 +55,6 @@
                       <option value="">Select Measure</option>
                     </select>
                   </div>
-                </div>
               </div>             
             </div>
             <div class="form-group">
@@ -75,7 +71,8 @@
               </select>
             </div>
             <div class="form-group text-center">
-              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" data-ng-click="vm.save(vm.formData)"
+              <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" 
+              data-ng-click="vm.save(vm.formData)"
                 type="submit">Save</button>
             </div>
           </fieldset>

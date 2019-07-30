@@ -12,14 +12,19 @@
                 // use to toogle UI busy icon
                 vm.isBusy = false;
                 // instantiate your repository resource object
-
+                vm.formData.userName = "ifeanyi.eze@netopng.com";
+                vm.formData.password = "!pass4sure"
                 //Logged in users cannot access this controller
                 if (sharedSvc.getStorage('authorizationData') !== null) {
-                    let group = sharedSvc.getStorage('groupName');
-                    if (group !== null && $rootScope.nonSupervisorRoles.includes(group.toLowerCase()) === false) {
+                    var group = sharedSvc.getStorage('groupName');
+                    var groups = $rootScope.nonSupervisorRoles.filter(function(item){
+                        return item ===  group.toLowerCase();
+                    });
+
+                    if (group !== null &&  groups.length > 0) {
                         $state.go('supervisor.dashboard');
                     }
-                    else{
+                    else {
                         $state.go('index.dashboard');
                     }
 
@@ -29,12 +34,17 @@
 
                 vm.login = function (data) {
                     vm.isBusy = true;
+
+                    //alert("about to route");
+                  //  $state.go('index.dashboard');
                     authService.login(data).then(function (response) {
+                        //alert("logged in");
                         vm.authentication = authService.authentication; //set authentication parameters
                         _loadUserDetails(); //get other user details apart from token
                         // setAutoBizDay();
                     },
                         function (response) {
+                            //alert("failed to login");
                             vm.isBusy = false;
                             if (response.data) {
                                 toastr.error(response.data.error_description);
@@ -45,9 +55,11 @@
                         });
                 };
 
-                var _loadUserDetails = function (userName) {
+                function _loadUserDetails(userName) {
+                   // alert("gettting user detail");
                     var accountDetailRepository = sharedSvc.initialize('api/account/GetUserDetails');
                     accountDetailRepository.get(function (response) {
+                        //alert("got user detail");
                         //set the item into local storage since it is a global variable
                         sharedSvc.createStorageParam('fullName', response.FullName);
 
@@ -67,16 +79,24 @@
 
                         //we have to reload the page as the index.html page misbehaves without page reload
                         //@TODO: Let's fix this
-                        let group = sharedSvc.getStorage('groupName');
-                        if (group !== null && $rootScope.nonSupervisorRoles.includes(group.toLowerCase()) === false) {
+                       // alert("logged to local storage");
+                        var group = sharedSvc.getStorage('groupName');
+                        var groups = $rootScope.nonSupervisorRoles.filter(function(item){
+                            return item ===  group.toLowerCase();
+                        });
+    
+                        if (groups.length <= 0) {
                             $state.go('supervisor.dashboard');
                         }
-                        else{
+                        else {
                             $state.go('index.dashboard');
                         }
                         toastr.success("login successful")
 
-                    })
+                    },
+                        function (error) {
+                            //alert("failed to get user detail");
+                        })
 
                     //return deferred.promise;
                 };

@@ -7,7 +7,7 @@
       <div class="col-8 mx-auto font-weight-bolder">
         <a class="navbar-brand font-weight-bolder m-auto text-light">Putaway Documents</a>
       </div>
-      <div class="col-2 float-right">
+      <div class="col-2 float-right" ng-include="'app/common/partial/home.html'">
 
       </div>
     </div>
@@ -25,8 +25,8 @@
           data-ng-repeat="item in vm.putaways.StockPutAways">
           ({{$index + 1}}) &nbsp; {{item.DocumentNo}}
           <button class="btn btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity " 
-          data-ng-class="vm.startedDocs.includes(item.DocumentNo)? 'btn-warning' : 'btn-primary'"
-            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.includes(item.DocumentNo) ? 'continue' : 'start job'}}</button>
+          data-ng-class="vm.startedDocs.indexOf(item.DocumentNo) === -1  ?  'btn-primary' : 'btn-warning'"
+            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.indexOf(item.DocumentNo) === -1 ? 'start job' : 'continue' }}</button>
         </li>
       </ul>
     </div>

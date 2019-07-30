@@ -8,7 +8,7 @@
 
     // alert("dashboard");
     const user = sharedSvc.getStorage('UserID');
-    var userTaskRepository = sharedSvc.initialize('api/userjob/' + user);
+    var userTaskRepository = sharedSvc.initialize('api/userjob/supervisor/' + user);
     userTaskRepository.get(function (response) {
       console.log(response);
       vm.job = response;
@@ -49,73 +49,46 @@
       vm.goodReceipts = $rootScope.userJob.ReceiptModel;
     }
 
-    // vm.startJob = function (receipt) {
-    //   var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + receipt.DocumentNo);
-    //   userTaskRepository.update({}, {}, function (response) {
-    //     vm.isBusy = false;
-    //     vm.isBusy2 = false;
-    //     vm.formData = {};
-
-    //     let savedReceipt = sharedSvc.getStorage("UserJob");
-    //     if (savedReceipt === null || savedReceipt === undefined) { // there's no receipt
-    //       sharedSvc.createStorageParam("UserJob", { startedDocs: [receipt.DocumentNo], currentDoc: receipt.DocumentNo });
-    //     }
-    //     else if (savedReceipt.startedDocs) {
-    //       let exists = savedReceipt.startedDocs.includes(receipt.DocumentNo);
-    //       if (!exists) {
-    //         savedReceipt.startedDocs.push(receipt.DocumentNo);
-    //       }
-    //       savedReceipt.currentDoc = receipt.DocumentNo;
-    //       sharedSvc.createStorageParam("UserJob", savedReceipt);
-    //     }
-
-    //     $rootScope.goodReceipt = receipt;
-    //     $state.go('main.goodreciept-new');
-    //     toastr.success(response.message);
-    //   }, function (error) {
-    //     vm.isBusy = false;
-    //     vm.isBusy2 = false;
-    //   })
-
+    // vm.showDetail = function(item){
+    //   console.log($rootScope.userJob);
     // }
 
   }]);
   angular.module("app").controller("supGoodRecieptViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
     var vm = this;
-    vm.currentDoc = null;
-    vm.task = {};
-    var userTaskRepository = sharedSvc.initialize('api/userjob/' + sharedSvc.getStorage("UserID"));
-    vm.job = sharedSvc.getStorage('UserJob');
-
-    if (vm.job && vm.job.jobs) {
-      vm.currentDoc = vm.job.currentDoc;
-      let result = vm.job.jobs.find(x => x.documentNo === vm.currentDoc);
-      if (result !== undefined) {
-        vm.task = result;
-      }
-      else {
-        toastr.warning("You have not saved any task for doccument:  " + vm.currentDoc);
-        $state.go('main.goodreciepts');
-      }
-    }
-    else {
-      $state.go('main.goodreciepts');
+    vm.currentDocNo = null;
+    vm.tasks = [];
+    
+    if ($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === '') {
+      $state.go('supervisor.dashboard');
     }
 
-    vm.submit = function () {
+    if ($rootScope.userJob != null) {
+      vm.receipt = $rootScope.userJob.ReceiptModel;
+      
+      if((vm.receipt !== undefined || vm.receipt !== null) && vm.receipt.GoodsReceiveNoteDetailTask !== undefined){
+        vm.tasks = vm.receipt.GoodsReceiveNoteDetailTask;
+        let receipt = vm.receipt.GoodReceiveNotes.find(c => c.ID === vm.tasks[0].GoodReceiveNoteID)
+        vm.currentDocNo = receipt.DocumentNo;
+      }
+
+
+    }
+
+    vm.confirm = function (doc) {
       swal({
         type: 'warning',
-        text: 'Are you sure you want to submit this document?',
+        text: 'Are you sure you want to confirm this document?',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
-        confirmButtonText: 'Submit',
+        confirmButtonText: 'Confirm',
         confirmButtonColor: '#0f9e8f',
         // cancelButtonColor: '#FF7518',
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        submitTasks();
+        confirm(doc);
       }, function () {
         //$state.go('index.dashboard') 
       });
@@ -173,23 +146,22 @@
 
 
 
-    function submitTasks() {
+    function confirm(docNo) {
       let job = sharedSvc.getStorage("UserJob");
-      let userJob = null;
-      if (job && job.jobs) {
-        userJob = job.jobs.find(x => x.documentNo === vm.currentDoc);
-      }
-      userJob.PalletDetailModel = userJob.tasks;
-      userTaskRepository.save({}, userJob, function (response) {
+      let confirmTaskRepository = sharedSvc.initialize('api/userjob/confirm/' + sharedSvc.getStorage("UserID") + "/" + docNo);
+      
+      confirmTaskRepository.update({}, {}, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
-        $state.go('main.success')
+        $state.go('supervisor.dahsboard');
         toastr.success(response.message);
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
-        toastr.error("failed to submit job");
+        if (error.data) {
+          toastr.error(error.data.Message);
+        }
       })
     }
 

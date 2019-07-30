@@ -14,13 +14,14 @@ var app = angular.module('app', ['ui.router', 'common.services', 'LocalStorageMo
 
       .state('index.dashboard', { url: '/dashboard', views: { 'mainContent': { templateUrl: 'app/views/dashboard/dashboard.html', controller: 'dashboardCtrl as vm' } } })
 
-      /// Auth Module
+      // /// Auth Module
       .state('access.login', { url: '/login', views: { 'loginContent': { templateUrl: 'app/views/access/login.html', controller: 'loginCtrl as vm' } } })
 
       // Modules
       .state("main.goodreciepts", { url: "/goodreciepts", views: { mainContent: { templateUrl: "app/views/goodreciept/goodreceipts.html", controller: "goodRecieptListCtrl as vm" } } })
       .state("main.goodreciept-view", { url: "/goodreciept-view", views: { mainContent: { templateUrl: "app/views/goodreciept/goodreceipt-view.html", controller: "goodRecieptViewCtrl as vm" } } })
       .state("main.goodreciept-new", { url: "/goodreciept-new", views: { mainContent: { templateUrl: "app/views/goodreciept/goodreceipt-new.html", controller: "goodRecieptNewCtrl as vm" } } })
+      .state("main.goodreciept-edit", { url: "/goodreciept-edit", views: { mainContent: { templateUrl: "app/views/goodreciept/goodreceipt-edit.html", controller: "goodRecieptEditCtrl as vm" } } })
 
       .state("main.transferinwards", { url: "/transferinwards", views: { mainContent: { templateUrl: "app/views/transferinward/transferinwards.html", controller: "transferInwardListCtrl as vm" } } })
       .state("main.transferinward-view", { url: "/transferinward-view", views: { mainContent: { templateUrl: "app/views/transferinward/transferinward-view.html", controller: "transferInwardViewCtrl as vm" } } })
@@ -103,24 +104,16 @@ app.run(function ($rootScope, authService, appSettings, localStorageService, $st
     $state.reload();
   };
 
-  $rootScope.$on('$stateChangeStart', function (event, next, current) {
-    if (next.name === "access.login") {
-      return;
-    } else if (sharedSvc.getStorage("authorizationData") === null) {
-      event.preventDefault();
-      return $state.go("access.login");
-    }
-    else if(next.name.split(".")[0] === "supervisor"){
-      let group = sharedSvc.getStorage('groupName');
-      if(group !== null && $rootScope.nonSupervisorRoles.includes(group.toLowerCase())){ // user is not a superviosr
-        event.preventDefault();
-        return $state.go("index.dashboard");
-      }
-        return;
-    } 
-      return;
-  })
 
+  // $rootScope.$on('$stateChangeStart', function (event, next, current) {
+  //    //alert('About to change Route')
+  //   // if (next.name === "access.login") {
+  //   //   return;
+  //   // } else if (sharedSvc.getStorage("authorizationData") === null) {
+  //   //   event.preventDefault();
+  //   //   return $state.go("access.login");
+  //   // }
+  // })
 });
 
 var cordovaApp = {

@@ -99,3 +99,9 @@
 .greenish{
     background: #536d0a;
 }
+
+.home-button{    
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

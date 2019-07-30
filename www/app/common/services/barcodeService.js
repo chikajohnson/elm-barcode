@@ -1,15 +1,15 @@
 (function () {
     'use strict';
-    angular.module('app').factory('barcodeService', ['$rootScope',
-        function ($rootScope) {
+    angular.module('app').factory('barcodeService', ['$rootScope', function ($rootScope) {
 
+            alert("entering  barcode service");
             var barcode = {};
             barcode.loadBarcodeScanner = loadBarcodeScanner;
             return barcode;
 
             // Barcode Implementation
             function loadBarcodeScanner() {
-                // alert("loading scanner");
+                alert("loading scanner");
                 var elements = document.querySelectorAll(".barcode");
                 elements.forEach(element => {
                     if (element !== undefined) {
@@ -17,14 +17,15 @@
                             scanBarCode(event.target);
                         })
                     }
-                    // alert('Event attached to DOM successfully');
-                    console.log(element);
+                    alert('Event attached to DOM successfully');
+                    // console.log(element);
                 });
 
             }
 
             function scanBarCode(source) {
-                console.log(cordova.plugins);
+                // console.log(cordova.plugins);
+                alert("about to scan")
                 cordova.plugins.barcodeScanner.scan(
                     function (result) {
                         if (!result.cancelled) {
@@ -33,7 +34,7 @@
                         }
                     },
                     function (error) {
-                        // alert("Scanning failed: " + error);
+                        alert("Scanning failed: " + error);
                     },
                     {
                         preferFrontCamera: false, // iOS and Android

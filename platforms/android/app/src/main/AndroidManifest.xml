@@ -13,4 +13,7 @@
         <activity android:label="Share" android:name="com.google.zxing.client.android.encode.EncodeActivity" />
     </application>
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="28" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 </manifest>

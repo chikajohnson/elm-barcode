@@ -14,7 +14,7 @@ var app = angular.module('app', ['ui.router', 'common.services', 'LocalStorageMo
 
       .state('index.dashboard', { url: '/dashboard', views: { 'mainContent': { templateUrl: 'app/views/dashboard/dashboard.html', controller: 'dashboardCtrl as vm' } } })
 
-      /// Auth Module
+      // /// Auth Module
       .state('access.login', { url: '/login', views: { 'loginContent': { templateUrl: 'app/views/access/login.html', controller: 'loginCtrl as vm' } } })
 
       // Modules
@@ -97,30 +97,22 @@ app.run(function ($rootScope, authService, appSettings, localStorageService, $st
   $rootScope.baseImageUrl = appSettings.imagePath;
   $rootScope.showAdminMenu = false;
   $rootScope.copyrightDate = new Date();
-  $rootScope.nonSupervisorRoles = ["counter", "dispatcher", "checker"];
+  $rootScope.nonSupervisorRoles = ["counter", "dispatcher", "checker", "picker"];
 
   $rootScope.Refresh = function () {
     $state.reload();
   };
 
-  $rootScope.$on('$stateChangeStart', function (event, next, current) {
-    if (next.name === "access.login") {
-      return;
-    } else if (sharedSvc.getStorage("authorizationData") === null) {
-      event.preventDefault();
-      return $state.go("access.login");
-    }
-    else if(next.name.split(".")[0] === "supervisor"){
-      let group = sharedSvc.getStorage('groupName');
-      if(group !== null && $rootScope.nonSupervisorRoles.includes(group.toLowerCase())){ // user is not a superviosr
-        event.preventDefault();
-        return $state.go("index.dashboard");
-      }
-        return;
-    } 
-      return;
-  })
 
+  // $rootScope.$on('$stateChangeStart', function (event, next, current) {
+  //    //alert('About to change Route')
+  //   // if (next.name === "access.login") {
+  //   //   return;
+  //   // } else if (sharedSvc.getStorage("authorizationData") === null) {
+  //   //   event.preventDefault();
+  //   //   return $state.go("access.login");
+  //   // }
+  // })
 });
 
 var cordovaApp = {

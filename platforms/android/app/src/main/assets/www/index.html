@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://192.168.2.108; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -56,18 +57,37 @@
 	<script src="app/auth/authService.js"></script>
 	<script src="app/views/access/controllers/login.js"></script>
 
-	<!-- module controllers -->
+	<!-- goodreceipt controllers -->
 	<script src="app/views/goodreciept/goodreciept-controller.js"></script>
-	<script src="app/views/transferinward/transferinward-controller.js"></script>
+	<script src="app/views/goodreciept/goodreceipt-new-controller.js"></script>
+	<script src="app/views/goodreciept/goodreceipt-view-controller.js"></script>
+
+	<!-- transfer inward controllers -->
+	<script src="app/views/transferinward/transferinward-list-controller.js"></script>
+	<script src="app/views/transferinward/transferinward-new-controller.js"></script>
+	<script src="app/views/transferinward/transferinward-view-controller.js"></script>
+
+	<!-- stock putaway controllers -->
+	<script src="app/views/putaway/putaway-list-controller.js"></script>
+	<script src="app/views/putaway/putaway-new-controller.js"></script>
+	<script src="app/views/putaway/putaway-view-controller.js"></script>
+
 	<script src="app/views/access/controllers/login.js"></script>
 	<script src="app/views/picklist/picklist-controller.js"></script>
-	<script src="app/views/putaway/putaway-controller.js"></script>
 	<script src="app/views/dashboard/dashboard-controller.js"></script>
 	<script src="app/views/util/util-controller.js"></script>
 
-	<!-- supervisor controller -->
-	<script src="app/views/supervisor/supervisor-controller.js"></script>
-	
+	<!-- supervisor controllers -->
+	<script src="app/views/supervisor/supervisor-dashboard-controller.js"></script>
+	<script src="app/views/supervisor/supervisor-receipt-list-controller.js"></script>
+	<script src="app/views/supervisor/supervisor-receipt-view-controller.js"></script>
+
+	<!-- <script src="app/views/supervisor/supervisor-putaway-list-controller.js"></script>
+	<script src="app/views/supervisor/supervisor-putaway-view-controller.js"></script> -->
+
+	<!-- <script src="app/views/supervisor/supervisor-transferinward-list-controller.js"></script>
+	<script src="app/views/supervisor/supervisor-transferinward-view-controller.js"></script>
+	 -->
 
 
 </body>
