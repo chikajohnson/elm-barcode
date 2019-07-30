@@ -141,110 +141,6 @@
       }
     }
 
-    // alert("populating formdata");
-    vm.formData = {
-      documentNo: vm.goodReceipts[0].DocumentNo,
-      detailID: noteDetails[0].ID,
-      parentID: noteDetails[0].GoodReceiveNoteID,
-      status: "Pending",
-      palletteNo: vm.formData.lotNo,
-      donorID: noteDetails[0].DonoID,
-      serialNoEnd: noteDetails[0].SerialNoEnd,
-      serialNoStart: noteDetails[0].SerialNoStart,
-      userID: sharedSvc.getStorage("UserID"),
-      lotNo: vm.formData.lotNo,
-      quantity: vm.formData.quantity,
-      productID: vm.formData.productID,
-      productName: vm.formData.productName,
-      productUniqueID: vm.formData.productUniqueID,
-      measurementID: vm.formData.measurementID,
-      measurementName: vm.formData.measurementName,
-      receivedQtyMeasurementUnit: vm.formData.receivedQtyMeasurementUnit,
-      receivedQtyMeasurementDescription: vm.formData.receivedQtyMeasurementDescription,
-      batchID: vm.formData.batchID,
-      batchExpiringDate: vm.formData.batchExpiringDate,
-      batchManufaturingDate: vm.formData.batchManufaturingDate,
-      stockStateName: vm.formData.stockStateName,
-      stockStateID: vm.formData.stockStateID,
-      stockState: vm.formData.stockState,
-      submitted: false
-    };
-
-
-    if (task === null || task === undefined) { // user does not have a task already
-      // alert("user has no task");
-      var job = {
-        tasks: [vm.formData],
-        documentNo: vm.goodReceipts[0].DocumentNo,
-        status: "pending",
-        type: "receipt",
-        userID: sharedSvc.getStorage("UserID")
-      };
-      task.jobs = [];
-      task.jobs.push(job);
-    } else {
-      if (task.jobs === undefined || task.jobs === null) {  // user has task but  there's no job already
-        // alert("user has task");
-        var job = {
-          tasks: [vm.formData],
-          documentNo: vm.goodReceipts[0].DocumentNo,
-          status: "pending",
-          type: "receipt",
-          userID: sharedSvc.getStorage("UserID")
-        };
-        task.jobs = [];
-        task.jobs.push(job);
-      }
-      else if (task.jobs && task.jobs.length > 0) {  // user has task  &&  there's no job already
-        // alert("user has jobs already");
-        var currentJob = task.jobs.filter(function (x) {
-          return x.type === 'receipt' && x.documentNo == vm.goodReceipts[0].DocumentNo
-        });
-        if (currentJob.length === 0) {  // this particular document is not among the documents started
-          // alert("this doc has not been statrted already");
-          var job = {
-            tasks: [vm.formData],
-            documentNo: vm.goodReceipts[0].DocumentNo,
-            status: "pending",
-            type: "receipt",
-            userID: sharedSvc.getStorage("UserID")
-          };
-          task.jobs.push(job);
-        }
-        else {   // this particular document is among the documents already started
-          // alert("this doc as been statrted already");
-          var currentIndex = -1;
-          for (var i = 0; i < task.jobs.length; i += 1) {
-            if (task.jobs[i].type === "receipt" && task.jobs[i].documentNo === vm.goodReceipts[0].DocumentNo) {
-              currentIndex = i;
-              break;
-            }
-          }
-
-          if (currentIndex !== -1) {  // old document
-            var oldTaskList = currentJob[0].tasks;
-
-            var lotIndex = -1;
-            for (var i = 0; i < oldTaskList.length; i += 1) {
-              if (oldTaskList[i].lotNo === vm.formData.lotNo) {
-                lotIndex = i;
-                break;
-              }
-            }
-
-            if (lotIndex !== -1) {
-              toastr.error("lot number " + vm.formData.lotNo + " has already been captured.");
-              return;
-            }
-            else {
-              currentJob[0].tasks.push(vm.formData);
-            }
-            task.jobs[currentIndex] = currentJob[0];
-          }
-        }
-      }
-    }
-
     //extract produts, measures and batches from receipt
     function getProductInfo(recpt) {
       // alert("about to extract poduct info");
@@ -301,6 +197,8 @@
 
       // alert("done getting products");
     }
+
+    
     vm.setSelectedProduct = function (item) {
       // alert("setting product");
       if (item !== undefined || item !== null) {
@@ -360,6 +258,112 @@
         return x.ProductID === vm.formData.productID && x.BatchID === vm.formData.batchID
           && x.ReceivedQtyMeasurementUnit === vm.formData.receivedQtyMeasurementUnit
       });
+
+
+
+      // alert("populating formdata");
+      vm.formData = {
+        documentNo: vm.goodReceipts[0].DocumentNo,
+        detailID: noteDetails[0].ID,
+        parentID: noteDetails[0].GoodReceiveNoteID,
+        status: "Pending",
+        palletteNo: vm.formData.lotNo,
+        donorID: noteDetails[0].DonoID,
+        serialNoEnd: noteDetails[0].SerialNoEnd,
+        serialNoStart: noteDetails[0].SerialNoStart,
+        userID: sharedSvc.getStorage("UserID"),
+        lotNo: vm.formData.lotNo,
+        quantity: vm.formData.quantity,
+        productID: vm.formData.productID,
+        productName: vm.formData.productName,
+        productUniqueID: vm.formData.productUniqueID,
+        measurementID: vm.formData.measurementID,
+        measurementName: vm.formData.measurementName,
+        receivedQtyMeasurementUnit: vm.formData.receivedQtyMeasurementUnit,
+        receivedQtyMeasurementDescription: vm.formData.receivedQtyMeasurementDescription,
+        batchID: vm.formData.batchID,
+        batchExpiringDate: vm.formData.batchExpiringDate,
+        batchManufaturingDate: vm.formData.batchManufaturingDate,
+        stockStateName: vm.formData.stockStateName,
+        stockStateID: vm.formData.stockStateID,
+        stockState: vm.formData.stockState,
+        submitted: false
+      };
+
+
+      if (task === null || task === undefined) { // user does not have a task already
+        // alert("user has no task");
+        var job = {
+          tasks: [vm.formData],
+          documentNo: vm.goodReceipts[0].DocumentNo,
+          status: "pending",
+          type: "receipt",
+          userID: sharedSvc.getStorage("UserID")
+        };
+        task.jobs = [];
+        task.jobs.push(job);
+      } else {
+        if (task.jobs === undefined || task.jobs === null) {  // user has task but  there's no job already
+          // alert("user has task");
+          var job = {
+            tasks: [vm.formData],
+            documentNo: vm.goodReceipts[0].DocumentNo,
+            status: "pending",
+            type: "receipt",
+            userID: sharedSvc.getStorage("UserID")
+          };
+          task.jobs = [];
+          task.jobs.push(job);
+        }
+        else if (task.jobs && task.jobs.length > 0) {  // user has task  &&  there's no job already
+          // alert("user has jobs already");
+          var currentJob = task.jobs.filter(function (x) {
+            return x.type === 'receipt' && x.documentNo == vm.goodReceipts[0].DocumentNo
+          });
+          if (currentJob.length === 0) {  // this particular document is not among the documents started
+            // alert("this doc has not been statrted already");
+            var job = {
+              tasks: [vm.formData],
+              documentNo: vm.goodReceipts[0].DocumentNo,
+              status: "pending",
+              type: "receipt",
+              userID: sharedSvc.getStorage("UserID")
+            };
+            task.jobs.push(job);
+          }
+          else {   // this particular document is among the documents already started
+            // alert("this doc as been statrted already");
+            var currentIndex = -1;
+            for (var i = 0; i < task.jobs.length; i += 1) {
+              if (task.jobs[i].type === "receipt" && task.jobs[i].documentNo === vm.goodReceipts[0].DocumentNo) {
+                currentIndex = i;
+                break;
+              }
+            }
+
+            if (currentIndex !== -1) {  // old document
+              var oldTaskList = currentJob[0].tasks;
+
+              var lotIndex = -1;
+              for (var i = 0; i < oldTaskList.length; i += 1) {
+                if (oldTaskList[i].lotNo === vm.formData.lotNo) {
+                  lotIndex = i;
+                  break;
+                }
+              }
+
+              if (lotIndex !== -1) {
+                toastr.error("lot number " + vm.formData.lotNo + " has already been captured.");
+                return;
+              }
+              else {
+                currentJob[0].tasks.push(vm.formData);
+              }
+              task.jobs[currentIndex] = currentJob[0];
+            }
+          }
+        }
+      }
 
 
 
