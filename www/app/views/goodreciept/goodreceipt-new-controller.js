@@ -141,14 +141,14 @@
       }
     }
 
-    //extract produts, measures and batches from receipt
+
+    //extract produts, measures and batches from transfer
     function getProductInfo(recpt) {
       // alert("about to extract poduct info");
       if (recpt === undefined || recpt === null || recpt === '') {
         $state.go('index.dashboard');
       } else {
-        var product, batch, measure = {}
-        // alert("about to iterate GR details");
+        var product;        // alert("about to iterate TRF details");
         recpt.GoodReceiveNoteDetails.forEach(function (prod) {
           // alert("iterating detail");
           product = {
@@ -157,39 +157,7 @@
             ProductName: prod.ProductName,
             ProductUniqueID: prod.ProductUniqueID
           }
-          vm.products.push(product);
-
-          // alert("extrating batches");
-          var existingBatches = vm.batches.filter(function (x) {
-            return x.BatchID == prod.BatchID;
-          });
-          if (existingBatches.length <= 0) {
-            batch = {
-              BatchID: prod.BatchID,
-              BatchManufaturingDate: prod.BatchManufaturingDate,
-              BatchExpiringDate: prod.BatchExpiringDate,
-              ProductID: prod.ProductID
-            }
-            vm.batches.push(batch);
-          }
-
-          // alert("extracting measures")
-          var existingMeasures = vm.productMeasures.filter(function (x) {
-            return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
-          });
-          if (existingMeasures <= 0) {
-            measure = {
-              MeasurementID: prod.ReceivedQtyMeasurementUnit,
-              MeasurementName: prod.ReceivedQtyMeasurementUnit,
-              BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
-              BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
-              ReceivedQuantity: prod.ReceivedQuantity,
-              ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
-              ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
-              ProductID: prod.ProductID
-            }
-            vm.productMeasures.push(measure);
-          }
+          vm.products.push(product);         
         })
 
         // alert("done iterating details");
@@ -198,20 +166,51 @@
       // alert("done getting products");
     }
 
-    
+
     vm.setSelectedProduct = function (item) {
-      // alert("setting product");
+      alert("setting product");
+      vm.batch = null; vm.receivedQtyMeasure = null;
+      vm.batches = []; vm.productMeasures = [];
+
       if (item !== undefined || item !== null) {
         vm.formData.productID = item.ProductID;
         vm.formData.productName = item.ProductName;
         vm.formData.productUniqueID = item.ProductUniqueID;
 
-        vm.batches = vm.batches.filter(function (x) {
-          return x.ProductID === item.ProductID;
-        });
-        vm.productMeasures = vm.productMeasures.filter(function (x) {
-          return x.ProductID === item.ProductID;
-        })
+         // alert("extrating batches");
+         vm.goodReceipts[0].GoodReceiveNoteDetails.forEach(function(prod) {
+           if(prod.ProductID === item.ProductID){
+            var existingBatches = vm.batches.filter(function (x) {
+              return x.BatchID == prod.BatchID;
+            });
+            if (existingBatches.length <= 0) {
+              var batch = {
+                BatchID: prod.BatchID,
+                BatchManufaturingDate: prod.BatchManufaturingDate,
+                BatchExpiringDate: prod.BatchExpiringDate,
+                ProductID: prod.ProductID
+              }
+              vm.batches.push(batch);
+            }
+
+            var existingMeasures = vm.productMeasures.filter(function (x) {
+              return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
+            });
+            if (existingMeasures <= 0) {
+              var measure = {
+                MeasurementID: prod.ReceivedQtyMeasurementUnit,
+                MeasurementName: prod.ReceivedQtyMeasurementUnit,
+                BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
+                BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
+                ReceivedQuantity: prod.ReceivedQuantity,
+                ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
+                ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+                ProductID: prod.ProductID
+              }
+              vm.productMeasures.push(measure);
+            }
+           }
+         });
       }
     }
 

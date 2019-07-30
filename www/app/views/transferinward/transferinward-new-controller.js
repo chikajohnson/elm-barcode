@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  angular.module("app").controller("transferInwardNewCtrl", ["sharedSvc", "$state", '$scope', "$rootScope", "toastr", "barcodeService", function (sharedSvc, $state, $scope, $rootScope, toastr, barcodeService) {
+  angular.module("app").controller("transferInwardNewCtrl", ["sharedSvc", "$state", '$scope', "$rootScope", "toastr", function (sharedSvc, $state, $scope, $rootScope, toastr) {
 
     var vm = this;
     // alert("enterd TR new");
@@ -25,42 +25,42 @@
     var element = document.getElementById("barcode");
     // alert("selected bar code elements ")
 
-    element.addEventListener("click", function (event) {
-      // alert("about scan");
-      scanBarCode(event.target);
+    // element.addEventListener("click", function (event) {
+    //   // alert("about scan");
+    //   scanBarCode(event.target);
 
-    })
+    // })
 
 
 
-    function scanBarCode(source) {
-      // alert("ready  to scan")
-      cordova.plugins.barcodeScanner.scan(
-        function (result) {
-          if (!result.cancelled) {
-            // alert("scanned successfully");
-            $rootScope.$emit('BarcodeCaptured', result.text);
-            // vm.formData.lotNo = result.text;
-          }
-        },
-        function (error) {
-          // alert("Scanning failed: " + error);
-        },
-        {
-          preferFrontCamera: false, // iOS and Android
-          showFlipCameraButton: true, // iOS and Android
-          showTorchButton: true, // iOS and Android
-          torchOn: false, // Android, launch with the torch switched on (if available)
-          saveHistory: false, // Android, save scan history (default false)
-          prompt: "Place a barcode inside the scan area", // Android
-          resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-          // formats : "QR_CODE,PDF_417", // default: all but PDF_417  and RSS_EXPANDED
-          // orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
-          disableAnimations: true, // iOS
-          disableSuccessBeep: false // iOS and Android
-        }
-      );
-    }
+    // function scanBarCode(source) {
+    //   // alert("ready  to scan")
+    //   cordova.plugins.barcodeScanner.scan(
+    //     function (result) {
+    //       if (!result.cancelled) {
+    //         // alert("scanned successfully");
+    //         $rootScope.$emit('BarcodeCaptured', result.text);
+    //         // vm.formData.lotNo = result.text;
+    //       }
+    //     },
+    //     function (error) {
+    //       // alert("Scanning failed: " + error);
+    //     },
+    //     {
+    //       preferFrontCamera: false, // iOS and Android
+    //       showFlipCameraButton: true, // iOS and Android
+    //       showTorchButton: true, // iOS and Android
+    //       torchOn: false, // Android, launch with the torch switched on (if available)
+    //       saveHistory: false, // Android, save scan history (default false)
+    //       prompt: "Place a barcode inside the scan area", // Android
+    //       resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+    //       // formats : "QR_CODE,PDF_417", // default: all but PDF_417  and RSS_EXPANDED
+    //       // orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+    //       disableAnimations: true, // iOS
+    //       disableSuccessBeep: false // iOS and Android
+    //     }
+    //   );
+    // }
 
 
     var userJob = sharedSvc.getStorage("UserJob");
@@ -148,8 +148,7 @@
       if (trfInward === undefined || trfInward === null || trfInward === '') {
         $state.go('index.dashboard');
       } else {
-        var product, batch, measure = {}
-        // alert("about to iterate TRF details");
+        var product;        // alert("about to iterate TRF details");
         trfInward.GoodTransferInwardDetails.forEach(function (prod) {
           // alert("iterating detail");
           product = {
@@ -158,39 +157,7 @@
             ProductName: prod.ProductName,
             ProductUniqueID: prod.ProductUniqueID
           }
-          vm.products.push(product);
-
-          // alert("extrating batches");
-          var existingBatches = vm.batches.filter(function (x) {
-            return x.BatchID == prod.BatchID;
-          });
-          if (existingBatches.length <= 0) {
-            batch = {
-              BatchID: prod.BatchID,
-              BatchManufaturingDate: prod.BatchManufaturingDate,
-              BatchExpiringDate: prod.BatchExpiringDate,
-              ProductID: prod.ProductID
-            }
-            vm.batches.push(batch);
-          }
-
-          // alert("extracting measures")
-          var existingMeasures = vm.productMeasures.filter(function (x) {
-            return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
-          });
-          if (existingMeasures <= 0) {
-            measure = {
-              MeasurementID: prod.ReceivedQtyMeasurementUnit,
-              MeasurementName: prod.ReceivedQtyMeasurementUnit,
-              BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
-              BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
-              ReceivedQuantity: prod.ReceivedQuantity,
-              ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
-              ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
-              ProductID: prod.ProductID
-            }
-            vm.productMeasures.push(measure);
-          }
+          vm.products.push(product);         
         })
 
         // alert("done iterating details");
@@ -201,18 +168,49 @@
 
 
     vm.setSelectedProduct = function (item) {
-      // alert("setting product");
+      alert("setting product");
+      vm.batch = null; vm.receivedQtyMeasure = null;
+      vm.batches = []; vm.productMeasures = [];
+
       if (item !== undefined || item !== null) {
         vm.formData.productID = item.ProductID;
         vm.formData.productName = item.ProductName;
         vm.formData.productUniqueID = item.ProductUniqueID;
 
-        vm.batches = vm.batches.filter(function (x) {
-          return x.ProductID === item.ProductID;
-        });
-        vm.productMeasures = vm.productMeasures.filter(function (x) {
-          return x.ProductID === item.ProductID;
-        })
+         // alert("extrating batches");
+         vm.transferInwards[0].GoodTransferInwardDetails.forEach(function(prod) {
+           if(prod.ProductID === item.ProductID){
+            var existingBatches = vm.batches.filter(function (x) {
+              return x.BatchID == prod.BatchID;
+            });
+            if (existingBatches.length <= 0) {
+              var batch = {
+                BatchID: prod.BatchID,
+                BatchManufaturingDate: prod.BatchManufaturingDate,
+                BatchExpiringDate: prod.BatchExpiringDate,
+                ProductID: prod.ProductID
+              }
+              vm.batches.push(batch);
+            }
+
+            var existingMeasures = vm.productMeasures.filter(function (x) {
+              return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
+            });
+            if (existingMeasures <= 0) {
+              var measure = {
+                MeasurementID: prod.ReceivedQtyMeasurementUnit,
+                MeasurementName: prod.ReceivedQtyMeasurementUnit,
+                BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
+                BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
+                ReceivedQuantity: prod.ReceivedQuantity,
+                ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
+                ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+                ProductID: prod.ProductID
+              }
+              vm.productMeasures.push(measure);
+            }
+           }
+         });
       }
     }
 

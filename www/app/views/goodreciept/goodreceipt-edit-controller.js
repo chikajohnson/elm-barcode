@@ -145,84 +145,113 @@
     }
   }
 
-  //extract produts, measures and batches from receipt
-  function getProductInfo(recpt) {
-    // alert("about to extract poduct info");
-    if (recpt === undefined || recpt === null || recpt === '') {
-      $state.go('index.dashboard');
-    } else {
-      var product, batch, measure = {}
-      // alert("about to iterate GR details");
-      recpt.GoodReceiveNoteDetails.forEach(function (prod) {
-        // alert("iterating detail");
-        product = {
-          ID: prod.ID,
-          ProductID: prod.ProductID,
-          ProductName: prod.ProductName,
-          ProductUniqueID: prod.ProductUniqueID
-        }
-        vm.products.push(product);
-
-        // alert("extrating batches");
-        var existingBatches = vm.batches.filter(function (x) {
-          return x.BatchID == prod.BatchID;
-        });
-        if (existingBatches.length <= 0) {
-          batch = {
-            BatchID: prod.BatchID,
-            BatchManufaturingDate: prod.BatchManufaturingDate,
-            BatchExpiringDate: prod.BatchExpiringDate,
-            ProductID: prod.ProductID
+    //extract produts, measures and batches from transfer
+    function getProductInfo(recpt) {
+      // alert("about to extract poduct info");
+      if (recpt === undefined || recpt === null || recpt === '') {
+        $state.go('index.dashboard');
+      } else {
+        var product, batch, measure = {}
+        // alert("about to iterate TRF details");
+        recpt.GoodReceiveNoteDetails.forEach(function (prod) {
+          // alert("iterating detail");
+          product = {
+            ID: prod.ID,
+            ProductID: prod.ProductID,
+            ProductName: prod.ProductName,
+            ProductUniqueID: prod.ProductUniqueID
           }
-          vm.batches.push(batch);
-        }
+          vm.products.push(product);
 
-        // alert("extracting measures")
-        var existingMeasures = vm.productMeasures.filter(function (x) {
-          return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
-        });
-        if (existingMeasures <= 0) {
-          measure = {
-            MeasurementID: prod.ReceivedQtyMeasurementUnit,
-            MeasurementName: prod.ReceivedQtyMeasurementUnit,
-            BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
-            BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
-            ReceivedQuantity: prod.ReceivedQuantity,
-            ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
-            ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
-            ProductID: prod.ProductID
+          // alert("extrating batches");
+          var existingBatches = vm.batches.filter(function (x) {
+            return x.BatchID == prod.BatchID;
+          });
+          if (existingBatches.length <= 0) {
+            batch = {
+              BatchID: prod.BatchID,
+              BatchManufaturingDate: prod.BatchManufaturingDate,
+              BatchExpiringDate: prod.BatchExpiringDate,
+              ProductID: prod.ProductID
+            }
+            vm.batches.push(batch);
           }
-          vm.productMeasures.push(measure);
-        }
-      })
 
-      // alert("done iterating details");
+          // alert("extracting measures")
+          var existingMeasures = vm.productMeasures.filter(function (x) {
+            return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
+          });
+          if (existingMeasures <= 0) {
+            measure = {
+              MeasurementID: prod.ReceivedQtyMeasurementUnit,
+              MeasurementName: prod.ReceivedQtyMeasurementUnit,
+              BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
+              BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
+              ReceivedQuantity: prod.ReceivedQuantity,
+              ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
+              ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+              ProductID: prod.ProductID
+            }
+            vm.productMeasures.push(measure);
+          }
+        })
+
+        // alert("done iterating details");
+      }
+
+      // alert("done getting products");
     }
+    vm.setSelectedProduct = function (item) {
+      // alert("setting product");
+      vm.batch = null; vm.receivedQtyMeasure = null;
+      vm.batches = []; vm.productMeasures = [];
 
-    // alert("done getting products");
-  }
-  vm.setSelectedProduct = function (item) {
-    // alert("setting product");
-    if (item) {
-      var products = vm.products.filter(function(prod) {
-        return prod.ProductID === item;
-      })
+      if (item) {
+        var products = vm.products.filter(function (prod) {
+          return prod.ProductID === item;
+        })
 
-      vm.formData.productID = products[0].ProductID;
-      vm.formData.productName = products[0].ProductName;
-      vm.formData.productUniqueID = products[0].ProductUniqueID;
+        vm.formData.productID = products[0].ProductID;
+        vm.formData.productName = products[0].ProductName;
+        vm.formData.productUniqueID = products[0].ProductUniqueID;
 
-      vm.batches = vm.batches.filter(function (x) {
-        return x.ProductID === products[0].ProductID;
-      });
-      vm.productMeasures = vm.productMeasures.filter(function (x) {
-        return x.ProductID === products[0].ProductID;
-      })
-    }
-  };
-  
+        vm.goodReceipts[0].GoodReceiveNoteDetails.forEach(function(prod) {
+          if(prod.ProductID === item){
+           var existingBatches = vm.batches.filter(function (x) {
+             return x.BatchID == prod.BatchID;
+           });
+           if (existingBatches.length <= 0) {
+             var batch = {
+               BatchID: prod.BatchID,
+               BatchManufaturingDate: prod.BatchManufaturingDate,
+               BatchExpiringDate: prod.BatchExpiringDate,
+               ProductID: prod.ProductID
+             }
+             vm.batches.push(batch);
+           }
 
-  vm.setSelectedStockState = function (item) {
+           var existingMeasures = vm.productMeasures.filter(function (x) {
+             return x.ReceivedQtyMeasurementUnit == prod.ReceivedQtyMeasurementUnit;
+           });
+           if (existingMeasures <= 0) {
+             var measure = {
+               MeasurementID: prod.ReceivedQtyMeasurementUnit,
+               MeasurementName: prod.ReceivedQtyMeasurementUnit,
+               BillQtyMeasurementUnit: prod.BillQtyMeasurementUnit,
+               BillQtyMeasurementUnitDescription: prod.BillQtyMeasurementUnitDescription,
+               ReceivedQuantity: prod.ReceivedQuantity,
+               ReceivedQtyMeasurementUnit: prod.ReceivedQtyMeasurementUnit,
+               ReceivedQtyMeasurementUnitDescription: prod.ReceivedQtyMeasurementUnitDescription,
+               ProductID: prod.ProductID
+             }
+             vm.productMeasures.push(measure);
+           }
+          }
+        });       
+      }
+    };
+
+    vm.setSelectedStockState = function (item) {
     // alert("selecting stock state");
     if (item !== undefined || item !== null) {
      var states =  vm.stockStates.filter(function(state){

@@ -65,7 +65,7 @@ var app = angular.module('app', ['ui.router', 'common.services', 'LocalStorageMo
 app.config(["toastrConfig", function (toastrConfig) {
   const options = {
     "positionClass": "toast-bottom-center",
-    "timeOut": 3000,
+    "timeOut": 5000,
   }
   angular.extend(toastrConfig, options);
 }]);

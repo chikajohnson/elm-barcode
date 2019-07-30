@@ -2,7 +2,7 @@
   "use strict";
   angular.module("app").controller("transferInwardViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
-    alert("inside TRF View");
+    // alert("inside TRF View");
     var vm = this;
     vm.currentDoc = null;
     vm.task = {};
@@ -10,7 +10,7 @@
     vm.job = sharedSvc.getStorage('UserJob');
 
     if (vm.job && vm.job.jobs) {
-      alert("filtered jobs");
+      // alert("filtered jobs");
       vm.currentDoc = vm.job.currentDoc;
       var results = vm.job.jobs.filter(function (x) {
         return x.documentNo === vm.currentDoc;
