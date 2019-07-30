@@ -119,52 +119,33 @@
         item.SN = i + 1;
       });
 
-      //filter unsubmitted task
-      taskModel.PalletDetailModel = taskModel.PalletDetailModel.filter(function(task){
+      //filter out unsubmitted task
+      taskModel.PalletDetailModel = taskModel.PalletDetailModel.filter(function (task) {
         return task.submitted === false;
       })
 
       if (taskModel.PalletDetailModel.length <= 0) {
-        toastr.error("You have already submitted all your tasks. Consider ending this job");    
+        toastr.error("You have already submitted all your tasks. Consider ending this job");
         return;
       }
+
       userTaskRepository.save({}, taskModel, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
 
-        vm.job.jobs.forEach(function(job){
-          if(job.documentNo === vm.job.currentDoc){
-              job.tasks.forEach(function(task){
-                task.submitted = true;
-              });
+        vm.job.jobs.forEach(function (job) {
+          if (job.documentNo === vm.job.currentDoc) {
+            job.tasks.forEach(function (task) {
+              task.submitted = true;
+            });
           }
         });
-        // var remainingJobs = vm.job.jobs.filter(function (x) {
-        //   return x.documentNo !== vm.currentDoc;
-        // });
 
-        // if (remainingJobs.length <= 0) {
-        //   var currentStartedDocs = vm.job.startedDocs.filter(function (x) {
-        //     return x !== vm.currentDoc;
-        //   })
-
-        //   if (currentStartedDocs.length === 0) {
-        //     delete vm.job.startedDocs;
-        //     delete vm.job.currentDoc;
-        //     delete vm.job.currentTask;
-        //   }
-        //   if (remainingJobs.length === 0) {
-        //     delete vm.job.jobs;
-        //   }
-        //   // vm.task.tasks = vm.task.tasks.filter(function(task){
-        //   //   return task !== vm.job.currentTask;
-        //   // })
-          sharedSvc.createStorageParam("UserJob", vm.job);
-        // }
-
+        sharedSvc.createStorageParam("UserJob", vm.job);
         toastr.success(response.message);
         $state.reload();
+
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
@@ -201,7 +182,6 @@
           sharedSvc.createStorageParam("UserJob", vm.job);
         }
 
-        // $rootScope.userJob.ReceiptModel.GoodReceiveNotes = $rootScope.userJob.ReceiptModel.GoodReceiveNotes.filter(x => x.DocumentNo !== docNo);
         toastr.success("Job ended successfully")
         $state.go('index.dashboard')
       }, function (error) {

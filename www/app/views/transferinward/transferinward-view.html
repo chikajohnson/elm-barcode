@@ -14,7 +14,6 @@
 </div>
 <div class="container-fluid">
     <div class="page-header" id="banner">
-
         <div id="accordion" class="w-100 m-0 p-0">
             <div class="row pl-4 pb-2 font-weight-bold" data-ng-show="vm.task.tasks.length > 0">
                 <span >completed tasks ({{vm.task.tasks.length}})</span> 
@@ -28,10 +27,18 @@
                                 data-toggle="collapse" href="#collapse{{ $index + 1 }}"
                                 title="click to view detail">{{task.lotNo}} </span>
                         </span>
-                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2"
+                        <span class=" text-success font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === true">
+                            Submitted
+                        </span>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === false"
                             type="button">
                             <i class="fa  fa-2x fa-trash " title="delete task"
                                 data-ng-click="vm.deleteTask(task.lotNo)"></i>
+                        </span>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === false"
+                            type="button">
+                            <i class="fa  fa-2x fa-pencil-square-o " title="edit task"
+                                data-ng-click="vm.editTask(task.lotNo)"></i>
                         </span>
                     </p>
                 </div>

@@ -26,6 +26,7 @@ var app = angular.module('app', ['ui.router', 'common.services', 'LocalStorageMo
       .state("main.transferinwards", { url: "/transferinwards", views: { mainContent: { templateUrl: "app/views/transferinward/transferinwards.html", controller: "transferInwardListCtrl as vm" } } })
       .state("main.transferinward-view", { url: "/transferinward-view", views: { mainContent: { templateUrl: "app/views/transferinward/transferinward-view.html", controller: "transferInwardViewCtrl as vm" } } })
       .state("main.transferinward-new", { url: "/transferinward-new", views: { mainContent: { templateUrl: "app/views/transferinward/transferinward-new.html", controller: "transferInwardNewCtrl as vm" } } })
+      .state("main.transferinward-edit", { url: "/transferinward-edit", views: { mainContent: { templateUrl: "app/views/transferinward/transferinward-edit.html", controller: "transferInwardEditCtrl as vm" } } })
 
       .state("main.picklist", { url: "/picklist", views: { mainContent: { templateUrl: "app/views/picklist/picklist.html", controller: "picklistCtrl as vm" } } })
       .state("main.picklist-new", { url: "/picklist-new", views: { mainContent: { templateUrl: "app/views/picklist/picklist-new.html", controller: "picklistNewCtrl as vm" } } })
