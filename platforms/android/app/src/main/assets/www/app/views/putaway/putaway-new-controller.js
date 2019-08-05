@@ -12,39 +12,40 @@
     vm.browserMode = true;
     vm.mobilePlatform = false;
     vm.putaways = [];
+    vm.putawayDetails = [];
     vm.savedTasks = [];
     vm.currentDoc = null;
+    vm.locationType = "";
 
-    alert("about to read load  SPA from storage");
+    // alert("about to read load  SPA from storage");
     var allUserJob = sharedSvc.getStorage("AllUserJob");
     if (allUserJob === null || allUserJob === undefined || allUserJob === '') {
       $state.go('index.dashboard');
     }
 
-    alert("about to select barcode elements ")
-    var element = document.getElementById("barcode");
-    alert("selected barcode elements ");
+    // alert("about to select barcode elements ")
+    var elements = document.getElementsByClassName("barcode");
+    //alert("selected barcode elements ");
 
-    element.addEventListener("click", function (event) {
-      // alert("about scan");
-      scanBarCode(event.target);
-
-    })
-
-
+    for (var index = 0; index < elements.length; index++) {
+      elements[index].addEventListener("click", function (event) {
+        //alert("about scan");
+        scanBarCode(event.target);
+      })
+    }
 
     function scanBarCode(source) {
-      alert("ready  to scan")
+      // alert("ready  to scan")
       cordova.plugins.barcodeScanner.scan(
         function (result) {
           if (!result.cancelled) {
-            alert("scanned successfully");
+            // alert("scanned successfully");
             $rootScope.$emit('BarcodeCaptured', result.text);
             vm.formData.lotNo = result.text;
           }
         },
         function (error) {
-          alert("Scanning failed: " + error);
+          // alert("Scanning failed: " + error);
         },
         {
           preferFrontCamera: false, // iOS and Android
@@ -65,69 +66,57 @@
 
     var userJob = sharedSvc.getStorage("UserJob");
     if (userJob && userJob.currentDoc) {
-      alert("there is currentDoc " + userJob.currentDoc);
+      // alert("there is currentDoc " + userJob.currentDoc);
       vm.currentDoc = userJob.currentDoc;
     }
     else {
-      alert("there is no currentDoc");
+      // alert("there is no currentDoc");
     }
 
 
-    alert("about to load  SPA");
+    // alert("about to load  SPA");
     if (allUserJob && allUserJob.PutawayModel) {
-      alert(allUserJob.PutawayModel.DocCount);
+      // alert(allUserJob.PutawayModel.DocCount);
       vm.putaways = allUserJob.PutawayModel.StockPutAways.filter(function (item) {
         return item.DocumentNo === vm.currentDoc;
       });
 
       if (vm.putaways.length > 0) {
-        alert("theres is a putaway of docNo " + vm.putaways[0].DocumentNo);
+        // alert("theres is a putaway of docNo " + vm.putaways[0].DocumentNo);
       }
       else {
-        alert("theres is no putaway ");
+        // alert("theres is no putaway ");
       }
     } else {
-      alert("theres no to load  GR");
+      // alert("theres no to load  GR");
     }
 
 
     var clientId = sharedSvc.getStorage('theclient');
     var depotCode = sharedSvc.getStorage('thedepot');
-    alert("about to load stockstates");
+    // alert("about to load stockstates");
     var stockStateRepository = sharedSvc.initialize('api/stockstates/' + clientId + "/" + depotCode);
-    alert("about to load stock state");
+    // alert("about to load stock state");
     stockStateRepository.get(function (response) {
-      alert("loaded stock state");
+      // alert("loaded stock state");
       vm.stockStates = response.result;
     });
 
     if (vm.putaways[0]) {
-      alert("stock putaway has value " + vm.putaways[0].DocumentNo);
+      // alert("stock putaway has value " + vm.putaways[0].DocumentNo);
     }
 
 
     if (window.cordova) {
-      alert("cordova supported");
+      // alert("cordova supported");
       //  barcodeService.loadBarcodeScanner();
       vm.mobilePlatform = true;
       vm.browserMode = false;
     } else {
-      alert("No cordova loaded");
+      // alert("No cordova loaded");
     }
 
-    getProductInfo(vm.putaways[0]);
-
-    $rootScope.$on('BarcodeCaptured', function (evt, data) {
-      $scope.$watch("vm.formData.lotNo", function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          vm.formData.lotNo = "";
-        }
-        vm.formData.lotNo = data;
-      })
-      $scope.$apply();
-    });
-
-
+    //  getProductInfo(vm.putaways[0].StockPutAwayDetails);
     var savesJob = sharedSvc.getStorage('UserJob');
     vm.currentDoc = savesJob.currentDoc;
 
@@ -136,26 +125,85 @@
         return x.documentNo === vm.currentDoc;
       });
 
-      alert("about to load previous task")
+      // alert("about to load previous task")
       if (item.length > 0 && item[0].tasks.length > 0) {
         vm.savedTasks = item[0].tasks;
       }
     }
 
+    $rootScope.$on('BarcodeCaptured', function (evt, data) {
+      $scope.$watch("vm.formData.palletteCode", function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          vm.formData.palletteCode = "";
+        }
+        vm.formData.palletteCode = data;
+      });
+
+      $scope.$watch("vm.formData.location", function (newVal, oldVal) {
+        // alert("location changed");
+        if (newVal !== oldVal) {
+          vm.formData.location = "";
+        }
+        vm.formData.location = data;
+      });
+      $scope.$apply();
+    });
+
+
+    $scope.$watch("vm.formData.location", function (newVal, oldVal) {
+      vm.products = [];
+      vm.formData.palletteCode = null;
+      vm.formData.palletteNo = null
+      // alert("location changed");
+      if (newVal !== oldVal) {
+        vm.formData.location = "";
+      }
+      vm.formData.location = newVal;
+
+      vm.putawayDetails = vm.putaways[0].StockPutAwayDetails.filter(function (item) {
+        if (item.CellCode.trim() !== "" && item.CellCode.trim() != null) {
+          vm.locationType = 'cell';
+          return item.CellCode.trim() === vm.formData.location;
+        } else if (item.PalletteCode.trim() !== "" && item.PalletteCode.trim() != null) {
+          vm.locationType = 'pallette';
+          return item.PalletteCode.trim() === vm.formData.location;
+        } else if (item.StorageAreaCode.trim() !== "" && item.StorageAreaCode.trim() != null) {
+          vm.locationType = 'storageArea';
+          return item.StorageAreaCode.trim() === vm.formData.location;
+        }
+      });
+
+      if (vm.putawayDetails.length <= 0 && newVal !== undefined && newVal !== '') {
+        toastr.error("Location " + vm.formData.location + " does not exist in the current document.")
+        return;
+      } else {
+        getProductInfo(vm.putawayDetails);
+      }
+    });
+
 
     //extract produts from putaway
-    function getProductInfo(putaway) {
-      if (putaway === undefined || putaway === null || putaway === '') {
+    function getProductInfo(putawayDetails) {
+      if (putawayDetails === undefined || putawayDetails === null || putawayDetails === '') {
         $state.go('index.dashboard');
       } else {
         var product = {}
 
-        putaway.StockPutAwayDetails.forEach(function (prod) {
+        putawayDetails.forEach(function (prod) {
           product = {
             ID: prod.ID,
             ProductID: prod.ProductID,
             ProductName: prod.ProductName,
-            ProductUniqueID: prod.ProductUniqueID
+            ProductUniqueID: prod.ProductUniqueID,
+            MeasurementID: prod.MeasurementID,
+            MeasurementName: prod.MeasurementName,
+            QtyReceived: prod.QtyReceived,
+            BatchID: prod.BatchID,
+            StockStateName: prod.StockStateName,
+            StockStateID: prod.StockStateID,
+            StockState: prod.StockState,
+            Quantity: prod.QtyReceived,
+            PutawayQty: prod.QtyReceived
           }
           vm.products.push(product);
         })
@@ -166,38 +214,15 @@
         vm.formData.productID = item.ProductID;
         vm.formData.productName = item.ProductName;
         vm.formData.productUniqueID = item.ProductUniqueID;
-        vm.formData.batchID = item.batchID;
-        vm.formData.batchExpiringDate = item.batchExpiringDate;
-        vm.formData.batchManufaturingDate = item.batchExpiringDate;
+        vm.formData.measurementID = item.MeasurementID;
+        vm.formData.measurementName = item.MeasurementName;
+        vm.formData.batchID = item.BatchID;
+        vm.formData.stockStateName = item.StockStateName;
+        vm.formData.stockStateID = item.StockStateID;
+        vm.formData.stockState = item.StockState;
+        vm.formData.quantity = item.Quantity;
       }
     }
-
-    $scope.$watch("vm.formData.location", function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        vm.formData.location = "";
-      }
-      vm.formData.location = newVal;
-      // vm.putaway = vm.putaway.StockPutAwayDetails.filter(function(item){
-      //   return
-      // })
-    });
-
-    $rootScope.$on('BarcodeCaptured', function (evt, data) {
-      $scope.$watch("vm.formData.PalletteCode", function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          vm.formData.PalletteCode = "";
-        }
-        vm.formData.PalletteCode = data;
-      });
-
-      $scope.$watch("vm.formData.location", function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          vm.formData.location = "";
-        }
-        vm.formData.location = data;
-      });
-      $scope.$apply();
-    });
 
 
 
@@ -211,10 +236,13 @@
 
       var putawayDetails = vm.putaways[0].StockPutAwayDetails.filter(function (item) {
         if (item.CellCode.trim() !== "" && item.CellCode.trim() != null) {
+          vm.locationType = 'cell';
           return item.CellCode.trim() === vm.formData.location;
         } else if (item.PalletteCode.trim() !== "" && item.PalletteCode.trim() != null) {
+          vm.locationType = 'pallette';
           return item.PalletteCode.trim() === vm.formData.location;
         } else if (item.StorageAreaCode.trim() !== "" && item.StorageAreaCode.trim() != null) {
+          vm.locationType = 'storageArea';
           return item.StorageAreaCode.trim() === vm.formData.location;
         }
       });
@@ -230,29 +258,40 @@
         detailID: putawayDetails[0].ID,
         parentID: putawayDetails[0].StockPutAwayID,
         status: "Pending",
-        palletteNo: vm.formData.lotNo,
+        palletteNo: vm.formData.palletteCode,
         donorID: putawayDetails[0].DonoID,
         serialNoEnd: putawayDetails[0].SerialNoEnd,
         serialNoStart: putawayDetails[0].SerialNoStart,
+        cellID: putawayDetails[0].CellID,
+        cellCode: putawayDetails[0].CellCode,
+        cellName: putawayDetails[0].CellName,
+        partitionCode: putawayDetails[0].PartitionCode,
+        partitionID: putawayDetails[0].PartitionID,
+        partitionName: putawayDetails[0].PartitionName,
+        putAwayStrategy: putawayDetails[0].PartitionName,
+        rackCode: putawayDetails[0].RackCode,
+        rackID: putawayDetails[0].RackID,
+        rackName: putawayDetails[0].RackName,
+        storageAreaCode: putawayDetails[0].StorageAreaCode,
+        storageAreaID: putawayDetails[0].StorageAreaID,
+        storageAreaName: putawayDetails[0].StorageAreaName,
         userID: sharedSvc.getStorage("UserID"),
         lotNo: vm.formData.lotNo,
+        location: vm.formData.location,
         quantity: vm.formData.quantity,
         productID: vm.formData.productID,
         productName: vm.formData.productName,
         productUniqueID: vm.formData.productUniqueID,
         measurementID: vm.formData.measurementID,
         measurementName: vm.formData.measurementName,
-        receivedQtyMeasurementUnit: vm.formData.receivedQtyMeasurementUnit,
-        receivedQtyMeasurementDescription: vm.formData.receivedQtyMeasurementDescription,
         batchID: vm.formData.batchID,
-        batchExpiringDate: vm.formData.batchExpiringDate,
-        batchManufaturingDate: vm.formData.batchManufaturingDate,
         stockStateName: vm.formData.stockStateName,
         stockStateID: vm.formData.stockStateID,
         stockState: vm.formData.stockState,
         quanitity: vm.formData.putawayQty,
         location: vm.formData.location,
-        PalletteCode: vm.formData.PalletteCode
+        palletteCode: vm.formData.palletteCode,
+        submitted: false
       };
 
       if (task === null || task === undefined) { // user does not have a task already
@@ -312,7 +351,7 @@
               }
 
               if (lotIndex !== -1) {
-                toastr.error("location number " + vm.formData.lotNo + " has already been captured.");
+                toastr.error("location number " + vm.formData.location + " has already been captured.");
                 return;
               }
               else {
@@ -324,6 +363,22 @@
         }
       }
 
+
+      function assignLocation(data) {
+        switch (vm.locationType) {
+          case "cell":
+            vm.formData.CellCode = data.CellCode;
+            vm.formData.CellID = data.CellID;
+            break;
+          case "pallette":
+            vm.formData.palletteNo = data.palletteNo;
+            vm.formData.CellID = data.CellID;
+            break;
+
+          default:
+            break;
+        }
+      }
 
 
       sharedSvc.createStorageParam('UserJob', task);

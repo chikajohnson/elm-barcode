@@ -20,18 +20,20 @@
   <div class="page-header" id="banner">
     <div class="row">
       <div class="col-sm-12">
-        <form class="text-left">
+        <form class="text-left" name="receiptForm" autocomplete="on">
           <fieldset>
             <div class="form-group">
               <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
-              <input class="form-control rounded-pill bg-light barcode" id="barcode" aria-describedby="lotHelp" type="text"
-                placeholder="Pallette No" data-ng-model="vm.formData.lotNo">
+              &nbsp; <span class="text-danger" data-ng-show='receiptForm.barcode.$invalid'>* </span>
+              <input class="form-control rounded-pill bg-light barcode" id="barcode" name="barcode" aria-describedby="lotHelp" type="number"
+                placeholder="Pallette No" data-ng-model="vm.formData.lotNo" required>
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="product">Product</label>
-              <select required class="form-control rounded-pill bg-light" id="product" data-ng-model="vm.product"
+              &nbsp; <span class="text-danger" data-ng-show='receiptForm.product.$invalid'>* </span>
+              <select required class="form-control rounded-pill bg-light" id="product" name="product" data-ng-model="vm.product"
                 data-ng-options="item as item.ProductID for item in vm.products"
-                data-ng-change="vm.setSelectedProduct(vm.product)">
+                data-ng-change="vm.setSelectedProduct(vm.product)" required>
                 <option value="">Select Product</option>
               </select>
             </div>
@@ -40,18 +42,20 @@
               <div class="row">
                 <div class="col-6">
                     <label class="font-weight-bolder" for="batch">Batch</label>
-                    <select class="form-control rounded-pill bg-light" id="batch" data-ng-model="vm.batch"
+                    &nbsp; <span class="text-danger" data-ng-show='receiptForm.batch.$invalid'>* </span>
+                    <select class="form-control rounded-pill bg-light" id="batch" name="batch" data-ng-model="vm.batch"
                       data-ng-options="item as item.BatchID for item in vm.batches"
-                      data-ng-change="vm.setSelectedBatch(vm.batch)">
+                      data-ng-change="vm.setSelectedBatch(vm.batch)" required>
                       <option value="">Select Batch</option>
                     </select>
                 </div>
                 <div class="col-6">
                     <label class="font-weight-bolder" for="batch"> Measures</label>
-                    <select class="form-control rounded-pill bg-light font-weight-normal" id="productMeasure"
+                    &nbsp; <span class="text-danger" data-ng-show='receiptForm.productmeasure.$invalid'>* </span>
+                    <select class="form-control rounded-pill bg-light font-weight-normal" id="productMeasure" name="productmeasure"
                       data-ng-model="vm.receivedQtyMeasure"
                       data-ng-options="item as item.ReceivedQtyMeasurementUnit for item in vm.productMeasures"
-                      data-ng-change="vm.setSelectedMeasure(vm.receivedQtyMeasure)">
+                      data-ng-change="vm.setSelectedMeasure(vm.receivedQtyMeasure)" required>
                       <option value="">Select Measure</option>
                     </select>
                   </div>
@@ -59,21 +63,22 @@
             </div>
             <div class="form-group">
                 <label class="font-weight-bolder" for="qty">Quantity</label>
-                <input class="form-control rounded-pill bg-light" id="qty" aria-describedby="qtyHelp" type="number"
-                  placeholder="Quantity" data-ng-model="vm.formData.quantity">
+                &nbsp; <span class="text-danger" data-ng-show='receiptForm.qty.$invalid'>* </span>
+                <input class="form-control rounded-pill bg-light" id="qty" name="qty" aria-describedby="qtyHelp" type="number"
+                  placeholder="Quantity" data-ng-model="vm.formData.quantity" required> 
             </div>
             <div class="form-group">
               <label class="font-weight-bolder" for="batch">Stock State</label>
-              <select class="form-control rounded-pill bg-light" id="stockstate" data-ng-model="vm.stockState"
+              &nbsp; <span class="text-danger" data-ng-show='receiptForm.stockstate.$invalid'>* </span>
+              <select class="form-control rounded-pill bg-light" id="stockstate" name="stockstate" data-ng-model="vm.stockState"
                 data-ng-options="item as item.StockState for item in vm.stockStates"
-                data-ng-change="vm.setSelectedStockState(vm.stockState)">
+                data-ng-change="vm.setSelectedStockState(vm.stockState)" required>
                 <option value="">Select Stock State</option>
               </select>
             </div>
             <div class="form-group text-center">
               <button class="btn btn-primary  px-5 font-weight-bolder rounded-pill" 
-              data-ng-click="vm.save(vm.formData)"
-                type="submit">Save</button>
+               data-ng-click="vm.save(vm.formData)"    type="submit" data-ng-disabled="receiptForm.$invalid" > Save</button>
             </div>
           </fieldset>
         </form>

@@ -7,8 +7,7 @@
       <div class="col-8 mx-auto font-weight-bolder">
         <a class="navbar-brand font-weight-bolder m-auto text-light">Good Transfer Inward</a>
       </div>
-      <div class="col-2 float-right">
-
+      <div class="col-2 float-right" ng-include="'app/common/partial/home.html'">
       </div>
     </div>
   </div>
@@ -17,9 +16,9 @@
 <div class="container-fluid">
   <div class="page-header mt-0" id="banner">
     <div class="row mt-0">
-      <!-- <span class=" badge bg-gray-light mt-0 mb-2 ml-3 text-secondary">
-        &nbsp;&nbsp; total documents : {{vm.transferInwards.DocCount}}
-      </span> -->
+      <span class=" badge bg-gray-light mt-0 mb-2 ml-3 text-secondary">
+        &nbsp;&nbsp; Assigned documents : {{vm.transferInwards.DocCount}}
+      </span>
       <ul class="list-group w-100">
         <li class="list-group-item d-flex justify-content-between align-items-center py-3 font-weight-bolder"
           data-ng-repeat="item in vm.transferInwards.GoodTransferInwards">

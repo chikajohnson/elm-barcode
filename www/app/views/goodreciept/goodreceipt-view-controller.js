@@ -8,6 +8,9 @@
     vm.task = {};
     var userTaskRepository = sharedSvc.initialize('api/userjob/' + sharedSvc.getStorage("UserID"));
     vm.job = sharedSvc.getStorage('UserJob');
+    vm.errorPallettes = [];
+    vm.invalidPallettes = [];
+    vm.countedPallettes = [];
 
     if (vm.job && vm.job.jobs) {
       // alert("filtered jobs");
@@ -100,7 +103,6 @@
     }
 
 
-
     function submitTasks() {
       var job = sharedSvc.getStorage("UserJob");
       var userJob = null;
@@ -129,32 +131,63 @@
         return;
       }
 
+
       userTaskRepository.save({}, taskModel, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
 
-        vm.job.jobs.forEach(function (job) {
-          if (job.documentNo === vm.job.currentDoc) {
-            job.tasks.forEach(function (task) {
-              task.submitted = true;
-            });
-          }
-        });
-
+        updateSubmittedTaskStatus();
         sharedSvc.createStorageParam("UserJob", vm.job);
-        toastr.success(response.message);
+        toastr.success("Task Submitted successfully");
         $state.reload();
 
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
-        if (error.data) {
-          toastr.error(error.data.Message);
-
-        }
+        extractPalletes(error.data);
       })
     }
+
+
+    function updateSubmittedTaskStatus() {
+      vm.job.jobs.forEach(function (job) {
+        if (job.documentNo === vm.job.currentDoc) {
+          job.tasks.forEach(function (task) {
+            if (vm.errorPallettes.indexOf(task.lotNo) === -1) {
+              task.submitted = true;
+            }
+          });
+        }
+      });
+    }
+
+
+    function extractPalletes(data) {
+      vm.invalidPallettes = []; vm.countedPallettes = [];
+      if (data && data.result) {
+        data.result.forEach(function (item) {
+          if (item.Status === 'invalid') {
+            vm.invalidPallettes.push(item.PalletDetailModel.PalletteNo);
+          }
+          else if (item.Status === 'counted') {
+            vm.countedPallettes.push(item.PalletDetailModel.PalletteNo);
+          }
+          vm.errorPallettes.push(item.PalletDetailModel.PalletteNo);
+        });
+      }
+
+      if(vm.invalidPallettes.length > 0){
+        var pallettes = vm.invalidPallettes.join(",");
+        toastr.error("Invalid pallete(s) " + pallettes );
+      }
+      
+      if(vm.countedPallettes.length > 0){
+        var pallettes = vm.invalidPallettes.join(",");
+        toastr.error(" Pallete(s) " + pallettes  + " have been counted");
+      }
+    }
+
 
     function endJob(docNo) {
       var userTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
@@ -193,3 +226,4 @@
 
   }]);
 })()
+

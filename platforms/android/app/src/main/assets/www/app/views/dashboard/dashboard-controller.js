@@ -6,6 +6,7 @@
 
     var vm = this;
     vm.job = {};
+    vm.isBusy = true;
     //$rootScope.userJob = {};
 
     const user = sharedSvc.getStorage('UserID');
@@ -16,6 +17,7 @@
       vm.job = response;
       // $rootScope.userJob = response;
       sharedSvc.createStorageParam("AllUserJob", response);
+      vm.isBusy = false;
       // alert("stored user jobs in LS");
     });
 

@@ -6,6 +6,7 @@
     vm.transferInwards = [];
     vm.startedDocs = [];
 
+    // alert('inside TRF list');
 
     let job = sharedSvc.getStorage("UserJob");
     if (job && job.startedDocs && job.startedDocs.length > 0) {
@@ -228,7 +229,7 @@
       vm.mobilePlatform = true;
       vm.browserMode = false;
     } else {
-      // alert("No cordova loaded");
+      // inward("No cordova loaded");
     }
 
     getProductInfo(vm.tranferInward);

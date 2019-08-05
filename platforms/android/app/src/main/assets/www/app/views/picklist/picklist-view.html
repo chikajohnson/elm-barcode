@@ -1,25 +1,24 @@
 <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
     <div class="col-12">
-        <div class="row  text-light text-center py-3">
+        <div class="row  text-light text-center py-2">
             <div class="col-2 float-left pr-0 mr-0">
-                <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.goodreciepts"></i>
+                <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="main.picklist"></i>
             </div>
             <div class="col-8 mx-auto font-weight-bolder">
                 {{vm.task.documentNo}}
             </div>
-            <div class="col-2 float-right">
+            <div class="col-2 float-right" ng-include="'app/common/partial/home.html'">
             </div>
         </div>
     </div>
 </div>
 <div class="container-fluid">
     <div class="page-header" id="banner">
-
         <div id="accordion" class="w-100 m-0 p-0">
             <div class="row pl-4 pb-2 font-weight-bold" data-ng-show="vm.task.tasks.length > 0">
-                <span >Completed tasks ({{vm.task.tasks.length}})</span> 
+                <span >completed tasks ({{vm.task.tasks.length}})</span> 
             </div>
-            <div class="card" data-ng-repeat="task in vm.task.tasks">
+            <div class="card" data-ng-repeat="task in vm.task.tasks | orderBy: 'submitted'">
                 <div class="card-header mb-0 p-2">
                     <p class="card-link">
                         <span class="float-left font-weight-bolder">
@@ -28,10 +27,18 @@
                                 data-toggle="collapse" href="#collapse{{ $index + 1 }}"
                                 title="click to view detail">{{task.location}} </span>
                         </span>
-                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2"
+                        <span class=" text-success font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === true">
+                            Submitted
+                        </span>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === false"
                             type="button">
                             <i class="fa  fa-2x fa-trash " title="delete task"
-                                data-ng-click="vm.deleteTask(task.location)"></i>
+                                data-ng-click="vm.deleteTask(task.lotNo)"></i>
+                        </span>
+                        <span class="btn  btn-sm text-secondary font-weight-bolder rounded-pill float-right mr-2" data-ng-show="task.submitted === false"
+                            type="button">
+                            <i class="fa  fa-2x fa-pencil-square-o " title="edit task"
+                                data-ng-click="vm.editTask(task.lotNo)"></i>
                         </span>
                     </p>
                 </div>
@@ -47,7 +54,7 @@
                             <li class="list-group-item"><span class=" font-weight-bolder">Quantity:
                                     &nbsp;</span>{{task.quantity}}</li>
                             <li class="list-group-item"><span class=" font-weight-bolder"> Measurement Unit:
-                                    &nbsp;</span>{{task.receivedQtyMeasurementUnit}}</li>
+                                    &nbsp;</span>{{task.measurementID}}</li>
                             <li class="list-group-item"><span class=" font-weight-bolder">Stock State:
                                     &nbsp;</span>{{task.stockStateName}}</li>
                         </ul>

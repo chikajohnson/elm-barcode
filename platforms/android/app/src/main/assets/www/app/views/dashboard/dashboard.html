@@ -4,8 +4,9 @@
       <a class="navbar-brand font-weight-bolder m-auto py-2 text-light">Dashboard</a>
     </div>
   </div>
-  <div class="row bg-gray m-0 p-1 py-3 mb-4">
+  <div class="row bg-gray m-0 p-1 py-2 mb-4">
     <div class="col rounded text-center ml-1">
+        <i class="fa text-dark fa-spinner fa-spin font-weight-bolder" data-ng-show="vm.isBusy"></i>
     </div>
     <div class="col-4 col-sm-2"></div>
     <div class="col bg-light rounded text-center pointer mr-1">
@@ -42,7 +43,7 @@
     </div>
 
     <div class="col-5  m-1 ashy dash-item">
-      <a data-ng-click="vm.navigateTo('main.goodreciepts', vm.job.ReleaseModel.DocCount)" class="pointer text-light">
+      <a data-ng-click="vm.navigateTo('main.picklist', vm.job.ReleaseModel.DocCount)" class="pointer text-light">
         <p class=""><i class="fa fa-2x fa-list" aria-hidden="true"></i></p>
         <span class=" font-weight-bold">Pick List</span>
         <span data-ng-show="vm.job.ReleaseModel.DocCount > 0"
@@ -50,13 +51,13 @@
       </a>
     </div>
     <div class="w-100"></div>
-    <div class="col-5  m-1  pinky dash-item">
-      <a data-ng-click="vm.navigateTo('main.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
+    <div class="col-5  m-1  dash-item">
+      <!-- <a data-ng-click="vm.navigateTo('main.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
         <p class=""><i class="fa fa-2x fa-arrow-circle-up" aria-hidden="true"></i></p>
         <span class=" font-weight-bold">Stock Release</span>
         <span data-ng-show="vm.job.InwardModel.DocCount > 0"
           class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
-      </a>
+      </a> -->
     </div>
     <div class="col-5  m-1 dash-item">
       <!-- <a data-ng-click="vm.navigateTo('main.inwards', vm.job.InwardModel.DocCount)" class="pointer text-light">

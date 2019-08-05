@@ -26,7 +26,8 @@
           ({{$index + 1}}) &nbsp; {{item.DocumentNo}}
           <button class="btn btn-sm  px-4 font-weight-bolder rounded-pill py-2 opacity " 
           data-ng-class="vm.startedDocs.indexOf(item.DocumentNo) === -1  ?  'btn-primary' : 'btn-warning'"
-            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.indexOf(item.DocumentNo) === -1 ? 'start job' : 'continue' }}</button>
+            data-ng-click="vm.startJob(item)" type="button">{{ vm.startedDocs.indexOf(item.DocumentNo) === -1 ? 'start job' : 'continue' }}
+          &nbsp;<i class="fa fa-spinner fa-spin" data-ng-show="vm.isBusy"></i></button>
         </li>
       </ul>
     </div>

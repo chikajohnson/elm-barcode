@@ -2,7 +2,6 @@
   "use strict";
   angular.module("app").controller("supGoodRecieptViewCtrl", ["sharedSvc", "$state", "toastr", function (sharedSvc, $state, toastr) {
 
-    // alert("receipt view");
     var vm = this;
     vm.currentDocNo = null;
     vm.tasks = [];
@@ -93,19 +92,6 @@
       var supervisorTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
       supervisorTaskRepository.update({}, {}, function (response) {
 
-        // let remainingJobs = vm.job.jobs.filter(x => x.documentNo !== docNo);
-        // if (remainingJobs !== null || remainingJobs !== undefined) {
-        //   let currentStartedDocs = vm.job.startedDocs.filter(x => x !== docNo);
-        //   if (currentStartedDocs.length === 0) {
-        //     delete vm.job.startedDocs;
-        //   }
-        //   if (remainingJobs.length === 0) {
-        //       delete vm.job.jobs;
-        //   }
-        //   sharedSvc.createStorageParam("UserJob", vm.job);
-        // }
-
-        // $rootScope.userJob.ReceiptModel.GoodReceiveNotes = $rootScope.userJob.ReceiptModel.GoodReceiveNotes.filter(x => x.DocumentNo !== docNo);
         toastr.success("Job rejected successfully")
         $state.go('index.dashboard')
       }, function (error) {

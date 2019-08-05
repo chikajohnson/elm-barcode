@@ -25,8 +25,6 @@
     <allow-intent href="geo:*" />
     <config-file mode="merge" parent="/*" target="AndroidManifest.xml">
         <uses-permission android:name="android.permission.CAMERA" />
-        <uses-feature android:name="android.hardware.camera" />
-        <uses-feature android:name="android.hardware.camera.autofocus" />
     </config-file>
     <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />

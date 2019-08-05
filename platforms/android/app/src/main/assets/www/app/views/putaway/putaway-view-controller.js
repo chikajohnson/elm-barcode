@@ -1,9 +1,9 @@
 (function () {
   "use strict";
-  
+
   angular.module("app").controller("putawayViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
-    alert("inside SPA View");
+    // alert("inside SPA View");
     var vm = this;
     vm.currentDoc = null;
     vm.task = {};
@@ -28,6 +28,13 @@
     else {
       $state.go('main.putaways');
     }
+
+    vm.editTask = function (lotNo) {
+      vm.job.currentTask = lotNo;
+      sharedSvc.createStorageParam("UserJob", vm.job);
+      $state.go('main.putaway-edit');
+    }
+
 
     vm.submit = function () {
       swal({
@@ -65,10 +72,10 @@
       });
     };
 
-    vm.deleteTask = function (lotNo) {
+    vm.deleteTask = function (location) {
       swal({
         type: 'error',
-        html: 'Are you sure you want to delete this task with lot number ' +   lotNo ,
+        html: 'Are you sure you want to delete this task with location ' + location,
         showCancelButton: true,
         cancelButtonText: 'Cancel',
         confirmButtonText: 'Delete',
@@ -77,9 +84,9 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        if (lotNo !== undefined || lotNo !== null) {
+        if (location !== undefined || location !== null) {
           var tasks = vm.task.tasks.filter(function (x) {
-            return x.lotNo !== lotNo
+            return x.location !== location
           });
 
           vm.job.jobs.forEach(function (elem) {
@@ -114,36 +121,36 @@
       taskModel.PalletDetailModel = taskModel.tasks;
 
       //attach serial no to tasks
-      taskModel.PalletDetailModel.forEach(function(item, i){
+      taskModel.PalletDetailModel.forEach(function (item, i) {
         item.SN = i + 1;
       });
-      
+
+      //filter out unsubmitted task
+      taskModel.PalletDetailModel = taskModel.PalletDetailModel.filter(function (task) {
+        return task.submitted === false;
+      })
+
+      if (taskModel.PalletDetailModel.length <= 0) {
+        toastr.error("You have already submitted all your tasks. Consider ending this job");
+        return;
+      }
+
       userTaskRepository.save({}, taskModel, function (response) {
         vm.isBusy = false;
         vm.isBusy2 = false;
         vm.formData = {};
 
-        var remainingJobs = vm.job.jobs.filter(function(x) {
-          return x.documentNo !== vm.currentDoc;
+        vm.job.jobs.forEach(function (job) {
+          if (job.documentNo === vm.job.currentDoc) {
+            job.tasks.forEach(function (task) {
+              task.submitted = true;
+            });
+          }
         });
 
-        if (remainingJobs.length <= 0) {
-          var currentStartedDocs = vm.job.startedDocs.filter(function(x) {
-            return x !== vm.currentDoc;
-          })
-
-          // if (currentStartedDocs.length === 0) {
-          //   // delete vm.job.startedDocs;
-          //   // delete vm.job.currentDoc;
-          // }
-          // if (remainingJobs.length === 0) {
-          //   // delete vm.job.jobs;
-          // }
-          sharedSvc.createStorageParam("UserJob", vm.job);
-        }
-
-        // $state.go('index.dashboard')
+        sharedSvc.createStorageParam("UserJob", vm.job);
         toastr.success(response.message);
+        $state.reload();
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
@@ -161,12 +168,13 @@
         vm.isBusy2 = false;
         vm.formData = {};
 
-        var remainingJobs = vm.job.jobs.filter(function(x){
-          return  x.documentNo !== docNo
+        var remainingJobs = vm.job.jobs.filter(function (x) {
+          return x.documentNo !== docNo;
         });
+
         if (remainingJobs.length <= 0) {
-          var currentStartedDocs = vm.job.startedDocs.filter(function(x){
-            return   x !== docNo;
+          var currentStartedDocs = vm.job.startedDocs.filter(function (x) {
+            return x !== docNo;
           });
 
           if (currentStartedDocs.length === 0) {
@@ -179,7 +187,6 @@
           sharedSvc.createStorageParam("UserJob", vm.job);
         }
 
-        // $rootScope.userJob.ReceiptModel.GoodReceiveNotes = $rootScope.userJob.ReceiptModel.GoodReceiveNotes.filter(x => x.DocumentNo !== docNo);
         toastr.success("Job ended successfully")
         $state.go('index.dashboard')
       }, function (error) {
@@ -188,7 +195,6 @@
         toastr.error(error.Message);
       })
     }
-
   }]);
 
 })()

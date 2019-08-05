@@ -24,42 +24,42 @@
     var element = document.getElementById("barcode");
     // alert("selected bar code elements ")
 
-    // element.addEventListener("click", function (event) {
-    //   // alert("about scan");
-    //   scanBarCode(event.target);
+    element.addEventListener("click", function (event) {
+      // alert("about scan");
+      // scanBarCode(event.target);
 
-    // })
+    })
 
 
 
-    //   function scanBarCode(source) {
-    //     // alert("ready  to scan")
-    //     cordova.plugins.barcodeScanner.scan(
-    //         function (result) {
-    //             if (!result.cancelled) {
-    //               // alert("scanned successfully");
-    //                 $rootScope.$emit('BarcodeCaptured', result.text);
-    //                vm.formData.lotNo = result.text;
-    //             }
-    //         },
-    //         function (error) {
-    //             // alert("Scanning failed: " + error);
-    //         },
-    //         {
-    //             preferFrontCamera: false, // iOS and Android
-    //             showFlipCameraButton: true, // iOS and Android
-    //             showTorchButton: true, // iOS and Android
-    //             torchOn: false, // Android, launch with the torch switched on (if available)
-    //             saveHistory: false, // Android, save scan history (default false)
-    //             prompt: "Place a barcode inside the scan area", // Android
-    //             resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-    //             // formats : "QR_CODE,PDF_417", // default: all but PDF_417  and RSS_EXPANDED
-    //             // orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
-    //             disableAnimations: true, // iOS
-    //             disableSuccessBeep: false // iOS and Android
-    //         }
-    //     );
-    // }
+      function scanBarCode(source) {
+        // alert("ready  to scan")
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                if (!result.cancelled) {
+                  // alert("scanned successfully");
+                    $rootScope.$emit('BarcodeCaptured', result.text);
+                   vm.formData.lotNo = result.text;
+                }
+            },
+            function (error) {
+                // alert("Scanning failed: " + error);
+            },
+            {
+                preferFrontCamera: false, // iOS and Android
+                showFlipCameraButton: true, // iOS and Android
+                showTorchButton: true, // iOS and Android
+                torchOn: false, // Android, launch with the torch switched on (if available)
+                saveHistory: false, // Android, save scan history (default false)
+                prompt: "Place a barcode inside the scan area", // Android
+                resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                // formats : "QR_CODE,PDF_417", // default: all but PDF_417  and RSS_EXPANDED
+                // orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                disableAnimations: true, // iOS
+                disableSuccessBeep: false // iOS and Android
+            }
+        );
+    }
 
 
     var userJob = sharedSvc.getStorage("UserJob");
@@ -168,7 +168,7 @@
 
 
     vm.setSelectedProduct = function (item) {
-      alert("setting product");
+      // alert("setting product");
       vm.batch = null; vm.receivedQtyMeasure = null;
       vm.batches = []; vm.productMeasures = [];
 
@@ -268,8 +268,8 @@
         status: "Pending",
         palletteNo: vm.formData.lotNo,
         donorID: noteDetails[0].DonoID,
-        serialNoEnd: noteDetails[0].SerialNoEnd,
-        serialNoStart: noteDetails[0].SerialNoStart,
+        serialNoEnd: parseInt(noteDetails[0].SerialNoEnd),
+      serialNoStart: parseInt( noteDetails[0].SerialNoStart),
         userID: sharedSvc.getStorage("UserID"),
         lotNo: vm.formData.lotNo,
         quantity: vm.formData.quantity,

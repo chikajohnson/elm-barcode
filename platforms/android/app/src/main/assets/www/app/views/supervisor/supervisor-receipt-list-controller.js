@@ -2,7 +2,6 @@
   "use strict";
   angular.module("app").controller("supGoodRecieptListCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
 
-    // alert("receipt list");
     var vm = this;
     vm.goodReceipts = []; 
     var supervisorJob = sharedSvc.getStorage("SupervisorJob");    

@@ -1,78 +1,41 @@
 (function () {
   "use strict";
-  angular.module("app").controller("supDashboardCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", "authService", function (sharedSvc, $state, $rootScope, toastr, authService) {
-
-    var vm = this;
-    vm.job = {};
-    $rootScope.userJob = {};
-
-    // alert("dashboard");
-    const user = sharedSvc.getStorage('UserID');
-    var userTaskRepository = sharedSvc.initialize('api/userjob/supervisor/' + user);
-    userTaskRepository.get(function (response) {
-      console.log(response);
-      vm.job = response;
-      $rootScope.userJob = response;
-    });
-
-
-    vm.navigateTo = function(path, count){
-      if ( count === undefined || count <= 0) {
-        toastr.warning("There are no completed jobs of this type.")
-        return;
-      }
-      $state.go(path);
-    }
-
-    vm.logOut = function () {
-      authService.logOut();
-      $state.go('access.login');
-    }
-
-  }]);
-  angular.module("app").controller("supGoodRecieptListCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
-
-    var vm = this;
-    vm.goodReceipts = [];
-    vm.startedDocs = [];
-
-    let job = sharedSvc.getStorage("UserJob");
-    if (job && job.startedDocs && job.startedDocs.length > 0) {
-      vm.startedDocs = job.startedDocs;
-    }
-
-    if ($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === '') {
-      $state.go('supervisor.dashboard');
-    }
-
-    if ($rootScope.userJob != null) {
-      vm.goodReceipts = $rootScope.userJob.ReceiptModel;
-    }
-
-  }]);
-  angular.module("app").controller("supGoodRecieptViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", function (sharedSvc, $state, $rootScope, toastr) {
+  angular.module("app").controller("supPickListViewCtrl", ["sharedSvc", "$state", "$rootScope", "toastr", "authService", function (sharedSvc, $state, $rootScope, toastr, authService) {
 
     var vm = this;
     vm.currentDocNo = null;
     vm.tasks = [];
-    
-    if ($rootScope.userJob === null || $rootScope.userJob === undefined || $rootScope.userJob === '') {
+    vm.picklist = null;
+    var supervisorJob = sharedSvc.getStorage("SupervisorJob");
+
+    if (!supervisorJob) {
       $state.go('supervisor.dashboard');
     }
 
-    if ($rootScope.userJob != null) {
-      vm.receipt = $rootScope.userJob.ReceiptModel;
-      
-      if((vm.receipt !== undefined || vm.receipt !== null) && vm.receipt.GoodsReceiveNoteDetailTask !== undefined){
-        vm.tasks = vm.receipt.GoodsReceiveNoteDetailTask;
-        let receipt = vm.receipt.GoodReceiveNotes.find(c => c.ID === vm.tasks[0].GoodReceiveNoteID)
-        vm.currentDocNo = receipt.DocumentNo;
+    if (supervisorJob.ReleaseModel) {
+      // alert("picklist model exists");
+      vm.picklist = supervisorJob.ReleaseModel;
+      if ((vm.picklist !== undefined || vm.picklist !== null) && vm.picklist.StockReleaseDetailTask !== undefined) {
+        vm.tasks = vm.picklist.StockReleaseDetailTask;
+        if (vm.tasks.length > 0) {
+          var picklists = vm.picklist.StockReleases.filter(function (item) {
+            return item.ID === vm.tasks[0].StockReleasesID;
+          })
+
+          if (picklists.length > 0) {
+            vm.currentDocNo = picklists[0].DocumentNo;
+          }
+        } 
+        else{
+          toastr.error("This document has no tasks attached");
+          $state.go('supervisor.picklists');
+        }
+        
       }
-
-
     }
 
     vm.confirm = function (doc) {
+      // alert("rabout to confirm");
       swal({
         type: 'warning',
         text: 'Are you sure you want to confirm this document?',
@@ -90,103 +53,49 @@
       });
     };
 
-    vm.endJob = function (doc) {
+    vm.RejectJob = function (doc) {
       swal({
         type: 'warning',
-        text: 'Are you sure you want to end this job?',
+        text: 'Are you sure you want to reject this job?',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
-        confirmButtonText: 'End Job',
+        confirmButtonText: 'Reject Job',
         confirmButtonColor: '#0f9e8f',
         // cancelButtonColor: '#FF7518',
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
-        endJob(doc);
+        rejectJob(doc);
       }, function () {
         return;
       });
     };
-
-    vm.deleteTask = function (lotNo) {
-      swal({
-        type: 'error',
-        html: `<span>Are you sure you want to delete this task with lot number 
-        <span class="text-dark font-weight-bolder bg-light">( ${lotNo})</span>?
-        </span>`,
-        showCancelButton: true,
-        cancelButtonText: 'Cancel',
-        confirmButtonText: 'Delete',
-        confirmButtonColor: 'red',
-        // cancelButtonColor: '#FF7518',
-        closeOnConfirm: true,
-        closeOnCancel: true
-      }).then(function () {
-        if (lotNo !== undefined || lotNo !== null) {
-          let tasks = vm.task.tasks.filter((x) => x.lotNo !== lotNo);
-
-          vm.job.jobs.map(x => {
-            if (x.documentNo === vm.currentDoc) {
-              x.tasks = tasks
-            }
-          })
-          sharedSvc.createStorageParam("UserJob", vm.job);
-          toastr.success("Task deleted successfully");
-        }
-
-        return;
-      }, function () {
-        return;
-      });
-    };
-
 
 
     function confirm(docNo) {
-      let job = sharedSvc.getStorage("UserJob");
-      let confirmTaskRepository = sharedSvc.initialize('api/userjob/confirm/' + sharedSvc.getStorage("UserID") + "/" + docNo);
-      
+      var confirmTaskRepository = sharedSvc.initialize('api/userjob/confirm/' + sharedSvc.getStorage("UserID") + "/" + docNo);
+      // alert("confirming");
       confirmTaskRepository.update({}, {}, function (response) {
-        vm.isBusy = false;
-        vm.isBusy2 = false;
+        // alert("confirmed");
+       
         vm.formData = {};
-        $state.go('supervisor.dahsboard');
+        $state.go('supervisor.dashboard');
         toastr.success(response.message);
       }, function (error) {
-        vm.isBusy = false;
-        vm.isBusy2 = false;
         if (error.data) {
           toastr.error(error.data.Message);
         }
       })
     }
 
-    function endJob(docNo) {
-      var userTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
-      userTaskRepository.update({}, {}, function (response) {
-        vm.isBusy = false;
-        vm.isBusy2 = false;
-        vm.formData = {};
+    function rejectJob(docNo) {
+      var supervisorTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);
+      supervisorTaskRepository.update({}, {}, function (response) {
 
-        let remainingJobs = vm.job.jobs.filter(x => x.documentNo !== docNo);
-        if (remainingJobs !== null || remainingJobs !== undefined) {
-          let currentStartedDocs = vm.job.startedDocs.filter(x => x !== docNo);
-          if (currentStartedDocs.length === 0) {
-            delete vm.job.startedDocs;
-          }
-          if (remainingJobs.length === 0) {
-              delete vm.job.jobs;
-          }
-          sharedSvc.createStorageParam("UserJob", vm.job);
-        }
-
-        // $rootScope.userJob.ReceiptModel.GoodReceiveNotes = $rootScope.userJob.ReceiptModel.GoodReceiveNotes.filter(x => x.DocumentNo !== docNo);
-        toastr.success("Job ended successfully")
+        toastr.success("Job rejected successfully")
         $state.go('index.dashboard')
       }, function (error) {
-        vm.isBusy = false;
-        vm.isBusy2 = false;
-        toastr.error("Failed to end job.")
+        toastr.error("Failed to reject job.")
       })
     }
 

@@ -42,7 +42,7 @@
       </div>
   
       <div class="col-5  m-1 ashy dash-item">
-        <a data-ng-click="vm.navigateTo('supervisor.goodreciepts', vm.job.ReleaseModel.DocCount)" class="pointer text-light">
+        <a data-ng-click="vm.navigateTo('supervisor.picklist', vm.job.ReleaseModel.DocCount)" class="pointer text-light">
           <p class=""><i class="fa fa-2x fa-list" aria-hidden="true"></i></p>
           <span class=" font-weight-bold">Pick List</span>
           <span data-ng-show="vm.job.ReleaseModel.DocCount > 0"
@@ -50,21 +50,16 @@
         </a>
       </div>
       <div class="w-100"></div>
-      <div class="col-5  m-1  pinky dash-item">
-        <a data-ng-click="vm.navigateTo('supervisor.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
+      <div class="col-5  m-1  dash-item">
+        <!-- <a data-ng-click="vm.navigateTo('supervisor.transferinwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
           <p class=""><i class="fa fa-2x fa-arrow-circle-up" aria-hidden="true"></i></p>
           <span class=" font-weight-bold">Stock Release</span>
           <span data-ng-show="vm.job.InwardModel.DocCount > 0"
             class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
-        </a>
+        </a> -->
       </div>
       <div class="col-5  m-1 dash-item">
-        <!-- <a data-ng-click="vm.navigateTo('main.inwards', vm.job.InwardModel.DocCount)" class="pointer text-light">
-          <p class=""><i class="fa fa-2x fa-arrow-circle-down" aria-hidden="true"></i></p>
-          <span class=" font-weight-bold">Stock Release</span>
-          <span data-ng-show="vm.job.InwardModel.DocCount > 0"
-            class="badge badge-danger px-2 py-2 float-right mx-2 font-weight-bolder rounded">{{vm.job.InwardModel.DocCount}}</span>
-        </a> -->
+
       </div>
     </div>
 </div>

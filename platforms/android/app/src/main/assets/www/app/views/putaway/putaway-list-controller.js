@@ -6,6 +6,7 @@
     vm.putaways = [];
     vm.startedDocs = [];
     vm.location = {};
+    vm.isBusy = false;
 
     var job = sharedSvc.getStorage("UserJob");
     if (job && job.startedDocs && job.startedDocs.length > 0) {
@@ -17,17 +18,18 @@
       $state.go('index.dashboard');
     }
 
-    alert("about to load SPA");
+    // alert("about to load SPA");
     if (allUserJob != null) {
-      alert(allUserJob.PutawayModel.DocCount);
+      // alert(allUserJob.PutawayModel.DocCount);
       vm.putaways = allUserJob.PutawayModel;
     }
 
     vm.startJob = function (putaway) {
+      // vm.isBusy = true;
       var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + putaway.DocumentNo);
-      alert("about to start SPA task");
+      // alert("about to start SPA task");
       userTaskRepository.update({}, {}, function (response) {
-        alert("started SPA task");
+        // alert("started SPA task");
         vm.formData = {};
 
         var savedPutaway = sharedSvc.getStorage("UserJob");
@@ -48,11 +50,11 @@
           sharedSvc.createStorageParam("UserJob", { startedDocs: [putaway.DocumentNo], currentDoc: putaway.DocumentNo });
         }
 
-        alert("logged SPA to local storage")
+        // alert("logged SPA to local storage")
         $rootScope.putaway = putaway;
         $state.go('main.putaway-new');
         toastr.success(response.message);
-        alert("routing to new SPA")
+        // alert("routing to new SPA")
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;

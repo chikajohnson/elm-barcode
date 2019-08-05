@@ -1,0 +1,59 @@
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary m-auto">
+    <div class="col-12">
+        <div class="row  text-light text-center py-3">
+            <div class="col-2 float-left pr-0 mr-0">
+                <i class="fa fa-2x  fa-arrow-circle-left pointer" ui-sref="supervisor.transferinwards"></i>
+            </div>
+            <div class="col-8 mx-auto font-weight-bolder">
+                {{vm.currentDocNo}}
+            </div>
+            <div class="col-2 float-right" ng-include="'app/common/partial/supervisor-home.html'">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="page-header" id="banner">
+
+        <div id="accordion" class="w-100 m-0 p-0">
+            <div class="row pl-4 pb-2 font-weight-bold">
+                <span >Completed tasks ({{vm.tasks.length}})</span> 
+            </div>
+            <div class="card" data-ng-repeat="task in vm.tasks">
+                <div class="card-body text-left bg-gray-light px-2">
+                    <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class=" font-weight-bolder">Pallet No:
+                                    &nbsp;</span>{{task.PalletNo}}</li>
+                        <li class="list-group-item"><span class=" font-weight-bolder">Product Code:
+                                &nbsp;</span>{{task.ProductID}}</li>
+                                <li class="list-group-item"><span class=" font-weight-bolder">Product Name:
+                                    &nbsp;</span>{{task.ProductName}}</li>
+                        <li class="list-group-item"><span class=" font-weight-bolder">Batch:
+                                &nbsp;</span>{{task.BatchID}}</li>
+                        <li class="list-group-item"><span class=" font-weight-bolder">Quantity:
+                                &nbsp;</span>{{task.Quantity}}</li>
+                        <li class="list-group-item"><span class=" font-weight-bolder"> Measurement Unit:
+                                &nbsp;</span>{{task.MeasurementID}}</li>
+                        <li class="list-group-item"><span class=" font-weight-bolder">Stock State:
+                                &nbsp;</span>{{task.StockStateName}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mx-auto text-center mt-5">
+            <div class="col-6">
+                <div class="form-group text-center">
+                    <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.confirm(vm.currentDocNo)"
+                        type="submit">Confirm</button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group text-center">
+                    <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill" type="submit">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
