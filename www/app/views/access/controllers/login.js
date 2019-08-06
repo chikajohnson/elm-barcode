@@ -18,16 +18,16 @@
                 if (sharedSvc.getStorage('authorizationData') !== null) {
                     var group = sharedSvc.getStorage('groupName');
                     var groups = $rootScope.nonSupervisorRoles.filter(function(item){
+                        
                         return item ===  group.toLowerCase();
                     });
 
                     if (group !== null &&  groups.length > 0) {
-                        $state.go('supervisor.dashboard');
-                    }
-                    else {
                         $state.go('index.dashboard');
                     }
-
+                    else {
+                        $state.go('supervisor.dashboard');
+                    }
                 }
 
                 vm.message = "";

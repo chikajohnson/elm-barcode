@@ -6,6 +6,7 @@
     vm.currentDocNo = null;
     vm.tasks = [];
     vm.receipt = null;
+    vm.isBusy = false;
     var supervisorJob = sharedSvc.getStorage("SupervisorJob");
 
     if (!supervisorJob) {
@@ -47,6 +48,7 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
+        vm.isBusy = true;
         confirm(doc);
       }, function () {
         //$state.go('index.dashboard') 
@@ -82,8 +84,12 @@
         $state.go('supervisor.dashboard');
         toastr.success(response.message);
       }, function (error) {
+        vm.isBusy = false;
         if (error.data) {
           toastr.error(error.data.Message);
+        }
+        else{
+          toastr.error("Failed to submit document, try again later");
         }
       })
     }

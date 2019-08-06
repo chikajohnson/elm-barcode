@@ -8,6 +8,11 @@
     vm.task = {};
     var userTaskRepository = sharedSvc.initialize('api/userjob/' + sharedSvc.getStorage("UserID"));
     vm.job = sharedSvc.getStorage('UserJob');
+    vm.errorPallettes = [];
+    vm.invalidPallettes = [];
+    vm.countedPallettes = [];
+    vm.isBusy = false;
+    vm.isBusy2 = false;
 
     if (vm.job && vm.job.jobs) {
       // alert("filtered jobs");
@@ -36,8 +41,10 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
+        vm.isBusy = true;
         submitTasks();
       }, function () {
+        vm.isBusy = false;
         //$state.go('index.dashboard') 
       });
     };
@@ -54,8 +61,10 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
+        vm.isBusy2 = true;
         endJob(doc);
       }, function () {
+        vm.isBusy2 = false;
         return;
       });
     };
@@ -99,6 +108,7 @@
       $state.go('main.transferinward-edit');
     }
 
+
     function submitTasks() {
       var job = sharedSvc.getStorage("UserJob");
       var userJob = null;
@@ -125,6 +135,7 @@
 
       if (taskModel.PalletDetailModel.length <= 0) {
         toastr.error("You have already submitted all your tasks. Consider ending this job");
+        vm.isBusy = false;
         return;
       }
 
@@ -133,27 +144,56 @@
         vm.isBusy2 = false;
         vm.formData = {};
 
-        vm.job.jobs.forEach(function (job) {
-          if (job.documentNo === vm.job.currentDoc) {
-            job.tasks.forEach(function (task) {
-              task.submitted = true;
-            });
-          }
-        });
-
+        updateSubmittedTaskStatus();
         sharedSvc.createStorageParam("UserJob", vm.job);
-        toastr.success(response.message);
+        toastr.success("Task  ubmitted successfully");
         $state.reload();
 
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
-        if (error.data) {
-          toastr.error(error.data.Message);
-
-        }
+        extractErrorPalletes(error.data);
       })
     }
+
+    function updateSubmittedTaskStatus() {
+      vm.job.jobs.forEach(function (job) {
+        if (job.documentNo === vm.job.currentDoc) {
+          job.tasks.forEach(function (task) {
+            if (vm.errorPallettes.indexOf(task.lotNo) === -1) {
+              task.submitted = true;
+            }
+          });
+        }
+      });
+    }
+
+
+    function extractErrorPalletes(data) {
+      vm.invalidPallettes = []; vm.countedPallettes = []; vm.errorPallettes = [];
+      if (data && data.result) {
+        data.result.forEach(function (item) {
+          if (item.Status === 'invalid') {
+            vm.invalidPallettes.push(item.PalletDetailModel.PalletteNo);
+          }
+          else if (item.Status === 'counted') {
+            vm.countedPallettes.push(item.PalletDetailModel.PalletteNo);
+          }
+          vm.errorPallettes.push(item.PalletDetailModel.PalletteNo);
+        });
+      }
+
+      if(vm.invalidPallettes.length > 0){
+        var pallettes = vm.invalidPallettes.join(", ");
+        toastr.error("Invalid pallete(s) " + pallettes );
+      }
+      
+      if(vm.countedPallettes.length > 0){
+        var pallettes = vm.invalidPallettes.join(", ");
+        toastr.error(" Pallete(s) " + pallettes  + " have been counted");
+      }
+    }
+
 
     function endJob(docNo) {
       var userTaskRepository = sharedSvc.initialize('api/userjob/endjob/' + sharedSvc.getStorage("UserID") + "/" + docNo);

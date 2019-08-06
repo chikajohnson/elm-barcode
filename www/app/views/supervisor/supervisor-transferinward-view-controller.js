@@ -6,6 +6,7 @@
     vm.currentDocNo = null;
     vm.tasks = [];
     vm.inward = null;
+    vm.isBusy = false;
     var supervisorJob = sharedSvc.getStorage("SupervisorJob");
 
     if (!supervisorJob) {
@@ -73,17 +74,22 @@
 
 
     function confirm(docNo) {
+      vm.isBusy = true;
       var confirmTaskRepository = sharedSvc.initialize('api/userjob/confirm/' + sharedSvc.getStorage("UserID") + "/" + docNo);
       // alert("confirming");
       confirmTaskRepository.update({}, {}, function (response) {
         // alert("confirmed");
-       
+        vm.isBusy = false;
         vm.formData = {};
         $state.go('supervisor.dashboard');
         toastr.success(response.message);
       }, function (error) {
+        vm.isBusy = false;
         if (error.data) {
           toastr.error(error.data.Message);
+        }
+        else{
+          toastr.error("Failed to submit document, again later");
         }
       })
     }

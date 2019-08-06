@@ -21,7 +21,7 @@
             <div class="form-group">
               <label class="font-weight-bolder" for="lotNo">Pallete No.</label>
               &nbsp; <span class="text-danger" data-ng-show='inwardForm.barcode.$invalid'>* </span>
-              <input class="form-control rounded-pill bg-light barcode" id="barcode" name="barcode" aria-describedby="lotHelp" type="text"
+              <input class="form-control rounded-pill bg-light barcode" id="barcode" name="barcode" aria-describedby="lotHelp" type="number"
                 placeholder="Pallette No" data-ng-model="vm.formData.lotNo" required>
             </div>
             <div class="form-group">
@@ -74,7 +74,7 @@
                       data-ng-model="vm.stockState"
                       data-ng-options="item.StockState as item.StockState for item in vm.stockStates"
                       data-ng-change="vm.setSelectedStockState(vm.stockState)" required>
-                      <option value="">Select Measure</option>
+                      <option value="">Select</option>
                     </select>
             </div>
             <div class="form-group text-center">

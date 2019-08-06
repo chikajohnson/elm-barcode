@@ -36,6 +36,8 @@
                                 &nbsp;</span>{{task.MeasurementID}}</li>
                         <li class="list-group-item"><span class=" font-weight-bolder">Stock State:
                                 &nbsp;</span>{{task.StockStateName}}</li>
+                                <li class="list-group-item"><span class=" font-weight-bolder">User Name:
+                                    &nbsp;</span>{{task.CreatedBy}}</li>
                     </ul>
                 </div>
             </div>
@@ -45,7 +47,7 @@
             <div class="col-6">
                 <div class="form-group text-center">
                     <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.confirm(vm.currentDocNo)"
-                        type="submit">Confirm</button>
+                        type="submit">Confirm &nbsp;&nbsp;<i class="fa fa-spinner fa-spin" data-ng-show="vm.isBusy"></i></button>
                 </div>
             </div>
             <div class="col-6">

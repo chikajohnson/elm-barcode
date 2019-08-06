@@ -10,6 +10,7 @@
     var userTaskRepository = sharedSvc.initialize('api/userjob/supervisor/' + user);
     userTaskRepository.get(function (response) {
       vm.job = response;
+      console.log(vm.job);
       sharedSvc.createStorageParam('SupervisorJob', response);
     });
 

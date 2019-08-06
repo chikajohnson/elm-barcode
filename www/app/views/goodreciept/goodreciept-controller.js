@@ -7,6 +7,7 @@
     vm.goodReceipts = [];
     vm.startedDocs = [];
     vm.isBusy = false;
+    vm.currentIndex = null;
 
     // alert("initializing good receipt");
     var job = sharedSvc.getStorage("UserJob");
@@ -29,9 +30,10 @@
 
     // vm.starded = vm.startedDocs.includes(item.DocumentNo) 
 
-    vm.startJob = function (receipt) {
+    vm.startJob = function (receipt, index) {
       // alert("about to start job");
       // vm.isBusy = true;
+      vm.currentIndex = index;
       var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + receipt.DocumentNo);
       userTaskRepository.update({}, {}, function (response) {
         vm.isBusy = false;

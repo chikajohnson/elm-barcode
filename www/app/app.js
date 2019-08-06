@@ -71,6 +71,10 @@ app.config(["toastrConfig", function (toastrConfig) {
   angular.extend(toastrConfig, options);
 }]);
 
+app.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.defaults.timeout = 5000;
+}]);
+
 app.run(function ($rootScope, authService, appSettings, localStorageService, $state, sharedSvc) {
   // setup loggedIn username
   var isloggedIn = sharedSvc.getStorage("authorizationData");
@@ -108,15 +112,26 @@ app.run(function ($rootScope, authService, appSettings, localStorageService, $st
 
 
   $rootScope.$on('$stateChangeStart', function (event, next, current) {
-    //  alert('About to change Route')
+      // alert('About to change Route')
     if (next.name === "access.login") {
       return;
     } else if (sharedSvc.getStorage("authorizationData") === null) {
       event.preventDefault();
       return $state.go("access.login");
-    }
-  })
+    } 
+   })
+
+  // function isSupervisorRole(){
+  //   var currentRole = sharedSvc.getStorage('groupName');
+  //   if (currentRole) {
+  //     var exists = $rootScope.nonSupervisorRoles.indexOf(currentRole.toLowerCase()) === -1;
+  //     return exists;
+  //   }
+  //   return false;
+  // }
 });
+
+
 
 var cordovaApp = {
   // Application Constructor

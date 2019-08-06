@@ -6,6 +6,7 @@
     var vm = this;
     vm.transferInwards = [];
     vm.startedDocs = [];
+    vm.currentIndex = null;
 
     // alert("initializing stock inward");
     var job = sharedSvc.getStorage("UserJob");
@@ -28,7 +29,8 @@
 
     // vm.starded = vm.startedDocs.includes(item.DocumentNo) 
 
-    vm.startJob = function (inward) {
+    vm.startJob = function (inward, index) {
+      vm.currentIndex = index;
       // alert("about to start job");
       var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + inward.DocumentNo);
       userTaskRepository.update({}, {}, function (response) {

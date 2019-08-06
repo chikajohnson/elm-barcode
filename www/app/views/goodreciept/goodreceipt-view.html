@@ -67,13 +67,13 @@
             <div class="col-6">
                 <div class="form-group text-center">
                     <button class="btn btn-primary  px-3 font-weight-bolder rounded-pill" data-ng-click="vm.submit()"
-                        type="submit">Submit</button>
+                        type="submit">Submit &nbsp;<i class="fa fa-spinner fa-spin" data-ng-show="vm.isBusy"></i></button>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group text-center">
                     <button class="btn btn-warning  px-3 font-weight-bolder rounded-pill"
-                        data-ng-click="vm.endJob(vm.task.documentNo)" type="submit">End Job</button>
+                        data-ng-click="vm.endJob(vm.task.documentNo)" type="submit">End Job &nbsp;<i class="fa fa-spinner fa-spin" data-ng-show="vm.isBusy2"></i></button>
                 </div>
             </div>
         </div>

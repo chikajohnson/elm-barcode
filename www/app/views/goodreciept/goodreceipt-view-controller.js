@@ -11,6 +11,8 @@
     vm.errorPallettes = [];
     vm.invalidPallettes = [];
     vm.countedPallettes = [];
+    vm.isBusy = false;
+    vm.isBusy2 = false;
 
     if (vm.job && vm.job.jobs) {
       // alert("filtered jobs");
@@ -28,6 +30,7 @@
     }
 
     vm.submit = function () {
+      
       swal({
         type: 'warning',
         text: 'Are you sure you want to submit this document?',
@@ -39,8 +42,10 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
+        vm.isBusy = true;
         submitTasks();
       }, function () {
+        vm.isBusy = false;
         //$state.go('index.dashboard') 
       });
     };
@@ -57,8 +62,10 @@
         closeOnConfirm: true,
         closeOnCancel: true
       }).then(function () {
+        vm.isBusy2 = true;
         endJob(doc);
       }, function () {
+        vm.isBusy2 = false;
         return;
       });
     };
@@ -145,10 +152,9 @@
       }, function (error) {
         vm.isBusy = false;
         vm.isBusy2 = false;
-        extractPalletes(error.data);
+        extractErrorPalletes(error.data);
       })
     }
-
 
     function updateSubmittedTaskStatus() {
       vm.job.jobs.forEach(function (job) {
@@ -163,8 +169,8 @@
     }
 
 
-    function extractPalletes(data) {
-      vm.invalidPallettes = []; vm.countedPallettes = [];
+    function extractErrorPalletes(data) {
+      vm.invalidPallettes = []; vm.countedPallettes = []; vm.errorPallettes = [];
       if (data && data.result) {
         data.result.forEach(function (item) {
           if (item.Status === 'invalid') {
@@ -178,12 +184,12 @@
       }
 
       if(vm.invalidPallettes.length > 0){
-        var pallettes = vm.invalidPallettes.join(",");
+        var pallettes = vm.invalidPallettes.join(", ");
         toastr.error("Invalid pallete(s) " + pallettes );
       }
       
       if(vm.countedPallettes.length > 0){
-        var pallettes = vm.invalidPallettes.join(",");
+        var pallettes = vm.invalidPallettes.join(", ");
         toastr.error(" Pallete(s) " + pallettes  + " have been counted");
       }
     }

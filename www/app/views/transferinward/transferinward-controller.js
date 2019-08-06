@@ -5,6 +5,7 @@
     var vm = this;
     vm.transferInwards = [];
     vm.startedDocs = [];
+    vm.currentIndex = null;
 
     // alert('inside TRF list');
 
@@ -21,7 +22,8 @@
       vm.transferInwards = $rootScope.userJob.TransferInwardModel;
     }
 
-    vm.startJob = function (inward) {
+    vm.startJob = function (inward, index) {
+      vm.currentIndex = index;
       var userTaskRepository = sharedSvc.initialize('api/userjob/startjob/' + sharedSvc.getStorage("UserID") + "/" + inward.DocumentNo);
       userTaskRepository.update({}, {}, function (response) {
         vm.isBusy = false;
